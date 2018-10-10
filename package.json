@@ -1,0 +1,24 @@
+{
+  "name": "cg-encryptedchatapp-frontend",
+  "version": "0.0.1",
+  "description": "This is the standalone client from an encrypted chat app build by Cyberguard",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sotheanith/CG-EncryptedChatApp-Frontend.git"
+  },
+  "author": "Sotheanith Sok, Hayat Ahmed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sotheanith/CG-EncryptedChatApp-Frontend/issues"
+  },
+  "homepage": "https://github.com/sotheanith/CG-EncryptedChatApp-Frontend#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "electron": "^3.0.2"
+  },
+  "dependencies": {}
+}

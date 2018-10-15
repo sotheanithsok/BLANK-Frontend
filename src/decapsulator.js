@@ -10,7 +10,7 @@ class Decapsulator{
         }catch(e){
             console.log(e);
         }
-       }
+    }
 
 //funtion to decapsulate asekey and tag.
 //function also decrypt the ciphertext.

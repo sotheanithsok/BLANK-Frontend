@@ -16,9 +16,8 @@
     "url": "https://github.com/sotheanith/CG-EncryptedChatApp-Frontend/issues"
   },
   "homepage": "https://github.com/sotheanith/CG-EncryptedChatApp-Frontend#readme",
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "electron": "^3.0.2"
-  },
-  "dependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "electron": "^3.0.7"
+  }
 }

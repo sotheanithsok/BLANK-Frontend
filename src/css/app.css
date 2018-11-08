@@ -18,7 +18,10 @@
     background-color: green;
     height: 100%;
     text-align: center;
-    padding: 1% 1% 1% 1%;
+
+}
+#user-container *{
+    width: 1000px;
 }
 #search-user-field{
     margin-bottom: 10%;
@@ -27,6 +30,17 @@
 #right-container {
     background-color: yellow;
     flex: 1;
-    margin-left: 0.5%
+    margin-left: 0.5%;
+    display: flex;
+    flex-direction: column;
+}
 
+#messages-container{
+    background-color: brown;
+    flex: 0.9;
+    margin-bottom: 1%
+}
+#message-controller-container{
+    background-color: orange;
+    flex:0.1;
 }

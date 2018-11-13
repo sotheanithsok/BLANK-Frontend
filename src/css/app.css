@@ -36,11 +36,19 @@
 }
 
 #messages-container{
-    background-color: brown;
+    background-color:gray;
     flex: 0.9;
     margin-bottom: 1%
 }
 #message-controller-container{
     background-color: orange;
     flex:0.1;
+    display: flex;
+    flex-direction: row;
+}
+#message-input-box {
+    align-content: center;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
 }

@@ -1,8 +1,7 @@
 const crypto = require('crypto');
 class User {
     constructor() {
-        //Generate keys pair
-        crypto.generateKeyPair('rsa', {
+        let k = crypto.generateKeyPairSync('rsa', {
             modulusLength: 4096,
             publicKeyEncoding: {
                 type: 'spki',
@@ -12,18 +11,13 @@ class User {
                 type: 'pkcs8',
                 format: 'pem'
             }
-        }, (err, publicKey, privateKey) => {
-            if(err){
-                console.log(err);
-            }else{
-                this.RSAPublicKey=publicKey;
-                this.RSAPrivateKey=privateKey;
-            }
         });
-        this.keysChain = new Map();
-        this.messagesChain = new Map();
+        this.RSAPublicKey = k.publicKey;
+        this.RSAPrivateKey = k.privateKey;
+        this.keysChain = {};
+        this.messagesChain = {};
     }
 }
-module.exports={
-    User:User
+module.exports = {
+    User: User
 }

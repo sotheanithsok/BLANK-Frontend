@@ -1,11 +1,20 @@
 const crypto = require('crypto');
 
+/**
+ * Encapsulator uses to encrypt data.
+ */
 class Encapsulator {
     constructor() {
         //Define the algorithem that will be use 
         this._algorithm = 'aes-256-gcm';
     }
 
+    /**
+     * Encrypt data with RSA public key and turns it into PGP encrypted data.
+     * 
+     * @param {*} text raw data.
+     * @param {*} publicKey RSA public key.
+     */
     encryptPGP(text, publicKey) {
         try {
             //Generate needed variables
@@ -40,6 +49,13 @@ class Encapsulator {
         }
 
     }
+
+    /**
+     * Encrypt data with passphrase and turns it into PGP encrypted data.
+     * 
+     * @param {*} text raw data.
+     * @param {*} passphrase super secret.
+     */
     encryptPassphrase(text, passphrase) {
         try {
 

@@ -1,47 +1,111 @@
-const request = require('request').defaults({ baseUrl: 'http://localhost:3000/',json:true});
+const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
 
 const userManager = require('./userManager');
-const User = require('./user');
 
 
+/**
+ * This ia a http requester
+ */
 class HttpRequester {
 
     constructor() {
+
     }
 
+    /**
+     * A post request to signup an account.
+     * 
+     * @param {*} username unique username.
+     * @param {*} email unique email.
+     * @param {*} name in-app identifier.
+     * @param {*} passphrase super secret.
+     */
     signup(username, email, name, passphrase) {
-        request.post('/signup',
+
+    }
+
+    /**
+     * A post request to login and request a JwtToken.
+     * After completion, it saves the returned token into user data using userManager.
+     * 
+     * @param {*} username unique username.
+     * @param {*} passphrase super secret.
+     */
+    login(username, passphrase) {
+
+    }
+
+    /**
+     * A post request to send a message. It is authenticated with JwtToken.
+     * 
+     * @param {*} receiver who will receieve the message.
+     * @param {*} content content of the message.
+     * @param {*} key key uses to encrypt the message.
+     * @param {*} tag tag uses to verify the message.
+     */
+    postMessage(receiver, content, key, tag) {
+        request.post('/messages',
             {
+                auth: {
+                    bearer: userManager.getUser().jwtToken
+                },
                 body: {
-                    username: username,
-                    email: email,
-                    name: name,
-                    password: passphrase
+                    receiver: receiver,
+                    content: content,
+                    key: key,
+                    tag: tag
                 }
             }, (err, res, body) => {
-                console.log(res.statusCode===400);
+                console.log(res.statusCode);
             }
         )
     }
 
-    login() {
-
-    }
-
-    postMessage() {
-
-    }
-
+    /**
+     * A get request to obtain unread messages. It is authenticated with JwtToken.
+     */
     getMessage() {
-
+        request.get('/messages',
+            {
+                auth: {
+                    bearer: userManager.getUser().jwtToken
+                }
+            }, (err, res, body) => {
+                console.log(body);
+            }
+        )
     }
 
+    /**
+     * A get request to obtain all messages including read and unread. It is authenticated with JwtToken.
+     */
     getAllMessages() {
-
+        request.get('/messagesAll',
+            {
+                auth: {
+                    bearer: userManager.getUser().jwtToken
+                }
+            }, (err, res, body) => {
+                console.log(body);
+            }
+        )
     }
 
-    searchUserByName() {
-
+    /**
+     * A get request to obtain list of names that satisfy specific criteria.
+     * 
+     * @param {*} name complete or partial parts of a name 
+     */
+    searchUserByName(name) {
+        request.get('/names/' + name,
+            {
+                auth: {
+                    bearer: userManager.getUser().jwtToken
+                }
+            }, (err, res, body) => {
+                console.log(body);
+            }
+        )
     }
 
 }

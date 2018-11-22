@@ -1,15 +1,22 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-// Class definition
+/**
+ * Decapsulator uses to decrypt data
+ */
 class Decapsulator {
     constructor(keyPath) {
         //Read private key
         this._algorithm = 'aes-256-gcm';
     }
 
-    //funtion to decapsulate asekey and tag.
-    //function also decrypt the ciphertext.
+
+
+    /**
+     * Decrypt PGP encrypted data with RSA private key.
+     * @param {*} encrypted PGP encrypted data.
+     * @param {*} privateKey RSA private key.
+     */
     decryptPGP(encrypted, privateKey) {
         let asekey = crypto.privateDecrypt(privateKey, Buffer.from(encrypted.key, 'hex'));
         let tag = Buffer.from(encrypted.tag, 'hex');
@@ -25,10 +32,15 @@ class Decapsulator {
         return decrypt;
     }
 
+    /**
+     * Decrypt PGP encrypted data with passphrase.
+     * @param {*} encrypted PGP encrypted data.
+     * @param {*} passphrase passphrase.
+     */
     decryptPassphrase(encrypted, passphrase) {
         try {
             //Generate AES key from passphrase
-            let salt = Buffer.from(encrypted.salt,'hex');
+            let salt = Buffer.from(encrypted.salt, 'hex');
             let iteration = 10000;
             let keylen = 32;
             let digest = 'sha256';

@@ -1,4 +1,8 @@
 const crypto = require('crypto');
+
+/**
+ * A general representation of user data. It wil generates RSA key pair at its creation.
+ */
 class User {
     constructor() {
         let k = crypto.generateKeyPairSync('rsa', {
@@ -14,7 +18,7 @@ class User {
         });
         this.RSAPublicKey = k.publicKey;
         this.RSAPrivateKey = k.privateKey;
-        this.jwtToken=null;
+        this.jwtToken = null;
         this.keysChain = {};
         this.messagesChain = {};
     }

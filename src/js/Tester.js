@@ -1,11 +1,14 @@
-const userManager = require('./UsersManager');
-const userManager1 = require('./UsersManager');
-const User = require('./User')
-console.log(userManager)
-console.log(userManager1)
-userManager.setUser(new User())
-console.log(userManager);
-console.log(userManager1)
+const userManager = require('./userManager')
+const User = require('./user')
+
+let username = "smith";
+let passphrase = "123456789"
+
+
+userManager.setUser(new User);
+userManager.saveUser(username,passphrase)
+let k  = userManager.loadUser(username,passphrase)
+console.log(k)
 
 
 

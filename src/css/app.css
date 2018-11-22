@@ -1,0 +1,54 @@
+#main-container {
+    display: flex;
+    height: 100vh;
+}
+
+#left-container {
+    background-color: red;
+    flex: 0.25;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#left-container *{
+    margin: 1% 1% 1% 1%;
+    width: 95%;
+}
+#users-container{
+    background-color: green;
+    height: 100%;
+    text-align: center;
+
+}
+#user-container *{
+    width: 1000px;
+}
+#search-user-field{
+    margin-bottom: 10%;
+}
+
+#right-container {
+    background-color: yellow;
+    flex: 1;
+    margin-left: 0.5%;
+    display: flex;
+    flex-direction: column;
+}
+
+#messages-container{
+    background-color:gray;
+    flex: 0.9;
+    margin-bottom: 1%
+}
+#message-controller-container{
+    background-color: orange;
+    flex:0.1;
+    display: flex;
+    flex-direction: row;
+}
+#message-input-box {
+    align-content: center;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+}

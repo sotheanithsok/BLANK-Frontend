@@ -18,6 +18,7 @@
   "homepage": "https://github.com/sotheanith/CG-EncryptedChatApp-Frontend#readme",
   "devDependencies": {},
   "dependencies": {
-    "electron": "^3.0.7"
+    "electron": "^3.0.7",
+    "request": "^2.88.0"
   }
 }

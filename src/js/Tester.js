@@ -1,14 +1,7 @@
-const userManager = require('./userManager')
-const User = require('./user')
+const hr = require('./httpRequester');
 
-let username = "smith";
-let passphrase = "123456789"
+hr.signup('Jake','Jake@gmail.com','JakeS','123456');
 
-
-userManager.setUser(new User);
-userManager.saveUser(username,passphrase)
-let k  = userManager.loadUser(username,passphrase)
-console.log(k)
 
 
 

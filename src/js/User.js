@@ -14,10 +14,9 @@ class User {
         });
         this.RSAPublicKey = k.publicKey;
         this.RSAPrivateKey = k.privateKey;
+        this.jwtToken=undefined;
         this.keysChain = {};
         this.messagesChain = {};
     }
 }
-module.exports = {
-    User: User
-}
+module.exports = User;

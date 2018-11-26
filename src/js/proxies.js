@@ -170,4 +170,3 @@ class Proxies {
     }
 }
 const obj = new Proxies();
-module.exports = obj;

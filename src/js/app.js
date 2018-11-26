@@ -1,18 +1,17 @@
 
 const messageInput = document.getElementById('message-input-box');
 const userSearchInput = document.getElementById('search-user-field');
-const httpRequester=require('../js/httpRequester.js');
-const proxies=require('../js/Proxies');
+
 
 function startFilterSearch() {
     if (userSearchInput.value.length > 0) {
-       proxies.searchResult.push(userSearchInput.value);
+       hr.searchUsersByName(userSearchInput.value);
     }
 }
 
 function endSearch() {
-    while(proxies.searchResult.length>0){
-        proxies.searchResult.pop();
+    while(obj.searchResult.length>0){
+        obj.searchResult.pop();
     }
 }
 
@@ -30,4 +29,3 @@ function sendMessage() {
     }
 
 }
-

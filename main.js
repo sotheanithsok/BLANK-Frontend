@@ -64,43 +64,58 @@ app.on('activate', () => {
 
 //SingleInstanance
 let userManager=require('./src/js/userManager');
-userManager.loadUser('jake',"123");
+userManager.loadUser('tester1','$2njD7Tt%d');
+// console.log(userManager.currentUser);
+// userManager.currentUser.jwtToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyNTgwMTUsImV4cCI6MTU0Mzg2MjgxNSwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJKb2huLTQyMDUifQ.xu1FZPmbN1e3vtunrql-PNURIKefpXuWIsIWBbGp5pg';
+// userManager.saveUser('tester1','$2njD7Tt%d');
 
 //IPC communication
 //Getter
-ipcMain.on('synchronous-get-RSAPublicKey',(event,args)=>{
+ipcMain.on('synchronous-main-getRSAPublicKey',(event,args)=>{
   event.returnValue  = userManager.getUser().RSAPublicKey;
 })
 
-ipcMain.on('synchronous-get-RSAPrivateKey',(event,args)=>{
+ipcMain.on('synchronous-main-getRSAPrivateKey',(event,args)=>{
   event.returnValue  = userManager.getUser().RSAPrivateKey;
 })
 
-ipcMain.on('synchronous-get-JWTToken',(event,args)=>{
+ipcMain.on('synchronous-main-getJWTToken',(event,args)=>{
   event.returnValue  = userManager.getUser().jwtToken;
 })
 
-ipcMain.on('synchronous-get-OtherPublicKey',(event,args)=>{
+ipcMain.on('synchronous-main-getOtherPublicKey',(event,args)=>{
   event.returnValue  = userManager.getUser().keysChain[args];
 })
 
-ipcMain.on('synchronous-get-MessagesChain',(event,args)=>{
+ipcMain.on('synchronous-main-getMessagesChain',(event,args)=>{
   event.returnValue  = userManager.getUser().messagesChain[args];
 })
 
 //Setter
-ipcMain.on('synchronous-set-JWTToken',(event,args)=>{
+ipcMain.on('synchronous-main-setJWTToken',(event,args)=>{
   event.returnValue  = userManager.getUser().jwtToken=args;
   event.returnValue=true;
 })
 
-ipcMain.on('synchronous-add-OtherPublicKey',(event,args)=>{
+ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
   //userManager.getUser().keysChain[args];
   event.returnValue=true;
 })
 
-ipcMain.on('synchronous-add-OtherPublicKey',(event,args)=>{
+ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
   //event.returnValue  = userManager.getUser().messagesChain[args];
   event.returnValue=true;
 })
 
+// //Data transfers
+// ipcMain.on('asynchronous-main-searchUsersByName',(event,args)=>{
+//   win.webContents.send('asynchronous-httpRequester-searchUsersByName')
+// })
+
+// ipcMain.on('asynchronous-main-updateSearchResult',(event,args)=>{
+//   win.webContents.send('asynchronous-httpRequester-updateSearchResult',args);
+// })
+
+// ipcMain.on('asynchronous-main-clearSearchResult',(event,args)=>{
+//   win.webContents.send('asynchronous-httpRequester-clearSearchResult',args);
+// })

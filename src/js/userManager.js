@@ -11,6 +11,9 @@ const User = require('./user');
  */
 class UserManager {
     constructor() {
+        if (!fs.existsSync('./resources/')) {
+            fs.mkdirSync('./resources/')
+        }
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path)
         }
@@ -41,6 +44,7 @@ class UserManager {
             }
 
         } catch (err) {
+            console.log(err);
             console.error('Failed to load user');
         }
 
@@ -67,6 +71,7 @@ class UserManager {
 
             });
         } catch (err) {
+            console.log(err);
             console.error('Fail to save user');
         }
 

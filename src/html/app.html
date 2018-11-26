@@ -15,11 +15,9 @@
 <body>
     <div id="main-container">
         <div id="left-container">
-            <input id="search-user-field" placeholder="Find or start a conversation." onclick="searchForUser()" oninput="startSearch()" type="search">
-            <div id="users-container">
-            </div>
-            <div id=search-result-container>
-            </div>
+            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()" onfocusout="endSearch()" onfocus="startFilterSearch()" type="search">
+            <div id="users-container"></div>
+            <div id=search-result-container></div>
         </div>
         <div id="right-container">
             <div id="messages-container"></div>

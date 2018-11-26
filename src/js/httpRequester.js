@@ -1,8 +1,7 @@
 const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
-
 const userManager = require('./userManager');
 
-
+const app =require('./app');
 /**
  * This ia a http requester
  */

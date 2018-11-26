@@ -11,11 +11,12 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    useContentSize:true
   })
 
   // and load the index.html of the app.
-  win.loadFile('./src/html/index.html')
+  win.loadFile('./src/html/app.html')
 
   // Open the DevTools.
   win.webContents.openDevTools()
@@ -53,3 +54,10 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const userManager=require('./src/js/userManager');
+userManager.loadUser('jake',"123");
+// userManager.getUser().jwtToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyMDE1NDYsImV4cCI6MTU0MzgwNjM0NiwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJ6eGN6Y3p4Y3pjeC00NDkwIn0.qleroZWTPA9oVfIoPqOX4CnNgLDCbUFl9uL3_pKMhc4";
+// userManager.saveUser('jake','123');
+
+// console.log(userManager.getUser().jwtToken)

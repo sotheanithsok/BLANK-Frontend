@@ -1,11 +1,12 @@
-//HTML elements
+//------------------------------HTML containers and elements--------------------------------//
 const messagesContainer = document.getElementById('messages-container');
 const usersContainer = document.getElementById('users-container');
 const messageInput = document.getElementById('message-input-box');
 const userSearchInput = document.getElementById('search-user-field');
 const searchResultContainer = document.getElementById('search-result-container');
+//--------------------------------------------------------------------------------------//
 
-//Proxy objects
+//-------------------------------------Proxy Objects----------------------------------------//
 let messages = new Proxy([], {
 
     /**
@@ -40,76 +41,85 @@ let messages = new Proxy([], {
 
 let users = new Proxy([], {
     set(target, property, value, receiver) {
-        if(property!='length'){
-            target.forEach((v)=>{
-                if(v===value){
+        if (property != 'length') {
+            target.forEach((v) => {
+                if (v === value) {
                     return true;
                 }
             })
-            target[property]=value;
+            target[property] = value;
             createUserElement(value);
         }
-       
+
         return true;
     },
-    deleteProperty(target,property){
-        if(property in target){
+    deleteProperty(target, property) {
+        if (property in target) {
             removeUserElement(target[property]);
-            target.splice(property,1);
+            target.splice(property, 1);
         }
         return true;
     }
 });
 
-let searchResult = new Proxy({}, {
+let searchResult = new Proxy([], {
     set: function (target, property, value, receiver) {
+        if (property != 'length') {
+            target.forEach((v) => {
+                if (v === value) {
+                    return true;
+                }
+            })
+            target[property] = value;
+            createResultedUserElement(value);
+        }
+
+        return true;
+    },
+    deleteProperty(target, property) {
+        if (property in target) {
+            removeResultedUserElement(target[property]);
+            target.splice(property, 1);
+        }
         return true;
     }
 });
+//--------------------------------------------------------------------------------------//
 
 
-function startSearch() {
-    while (searchResultContainer.firstChild) {
-        searchResultContainer.removeChild(searchResultContainer.firstChild);
+
+//-------------------------------Function---------------------------------//
+function startFilterSearch() {
+    if (userSearchInput.value.length > 0) {
+        httpRequester.searchUserByName(userSearchInput.value);
     }
-    let i = userSearchInput.value.length;
-    while (i--) {
-        createResultedUserElement(userSearchInput.value.charAt(i))
+}
+
+function endSearch() {
+    while (searchResult.length > 0) {
+        searchResult.pop();
     }
 }
 
 function sendMessage() {
-    let found=false;
-    for(let i =0; i <users.length;i++){
-        if(users[i]===messageInput.value){
+    let found = false;
+    for (let i = 0; i < users.length; i++) {
+        if (users[i] === messageInput.value) {
             delete users[i];
-            found=true;
+            found = true;
             break;
         }
     }
-    if(!found){
+    if (!found) {
         users.push(messageInput.value);
     }
-    console.log(users);
-    
+
 }
+//--------------------------------------------------------------------------------------//
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//-------------------------------------Helper functions-------------------------------------//
 /**
  * A helper function uses to create html message element.
  * @param {*} sender 
@@ -178,6 +188,25 @@ function removeUserElement(name) {
 function createResultedUserElement(name) {
     let button = document.createElement('button');
     button.appendChild(document.createTextNode(name));
+    button.setAttribute('tID', btoa(name));
     searchResultContainer.appendChild(button);
 }
 
+/**
+ * A helper function uses to remove html resulted user elements.
+ * @param {*} name 
+ */
+function removeResultedUserElement(name) {
+    let tID = btoa(name);
+    searchResultContainer.childNodes.forEach((element) => {
+        if (element.getAttribute('tID') === tID) {
+            searchResultContainer.removeChild(element);
+        }
+    });
+}
+//--------------------------------------------------------------------------------------//
+
+
+module.exports={
+    messages,users,searchResult
+}

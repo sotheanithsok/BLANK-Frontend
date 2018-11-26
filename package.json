@@ -4,7 +4,9 @@
   "description": "This is the standalone client from an encrypted chat app build by Cyberguard",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "postinstall": "electron-rebuild",
+    "electron-rebuild": "electron-rebuild"
   },
   "repository": {
     "type": "git",

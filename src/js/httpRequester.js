@@ -1,7 +1,6 @@
 const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
-const userManager = require('./userManager');
-
-const app =require('./app');
+const app = require('./app');
+const { ipcRenderer } = require('electron');
 /**
  * This ia a http requester
  */
@@ -96,6 +95,12 @@ class HttpRequester {
      * @param {*} name complete or partial parts of a name 
      */
     searchUserByName(name) {
+        let k = ipcRenderer.sendSync('synchronous-get-userManager');
+        k.currentUser.RSAPublicKey="HELLOTHERE"
+        setTimeout(()=>{
+            ipcRenderer.send('print');
+        },1);
+        
         request.get('/names/' + name,
             {
                 auth: {

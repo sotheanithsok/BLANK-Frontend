@@ -1,7 +1,15 @@
+// Enable live reload for Electron too
+require('electron-reload')(__dirname, {
+    // Note that the path to electron may vary according to the main file
+    electron: require(`${__dirname}/node_modules/electron`)
+});
+
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
+  ipcMain
 } = require('electron')
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -53,11 +61,18 @@ app.on('activate', () => {
 })
 
 // In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
 
-const userManager=require('./src/js/userManager');
+//SingleInstanance
+let userManager=require('./src/js/userManager');
 userManager.loadUser('jake',"123");
-// userManager.getUser().jwtToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyMDE1NDYsImV4cCI6MTU0MzgwNjM0NiwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJ6eGN6Y3p4Y3pjeC00NDkwIn0.qleroZWTPA9oVfIoPqOX4CnNgLDCbUFl9uL3_pKMhc4";
-// userManager.saveUser('jake','123');
 
-// console.log(userManager.getUser().jwtToken)
+//IPC communication
+ipcMain.on('synchronous-get-userManager',(event,args)=>{
+  console.log('LISTEN');
+  event.returnValue  = userManager;
+})
+
+ipcMain.on('print',(event,args)=>{
+  user=args;
+  console.log(userManager);
+});

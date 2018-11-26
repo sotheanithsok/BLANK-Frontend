@@ -6,6 +6,7 @@ const userSearchInput = document.getElementById('search-user-field');
 const searchResultContainer = document.getElementById('search-result-container');
 //--------------------------------------------------------------------------------------//
 
+
 //-------------------------------------Proxy Objects----------------------------------------//
 let messages = new Proxy([], {
 
@@ -86,7 +87,7 @@ let searchResult = new Proxy([], {
 });
 //--------------------------------------------------------------------------------------//
 
-
+const httpRequester=require('../js/httpRequester.js');
 
 //-------------------------------Function---------------------------------//
 function startFilterSearch() {

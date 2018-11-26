@@ -67,12 +67,40 @@ let userManager=require('./src/js/userManager');
 userManager.loadUser('jake',"123");
 
 //IPC communication
-ipcMain.on('synchronous-get-userManager',(event,args)=>{
-  console.log('LISTEN');
-  event.returnValue  = userManager;
+//Getter
+ipcMain.on('synchronous-get-RSAPublicKey',(event,args)=>{
+  event.returnValue  = userManager.getUser().RSAPublicKey;
 })
 
-ipcMain.on('print',(event,args)=>{
-  user=args;
-  console.log(userManager);
-});
+ipcMain.on('synchronous-get-RSAPrivateKey',(event,args)=>{
+  event.returnValue  = userManager.getUser().RSAPrivateKey;
+})
+
+ipcMain.on('synchronous-get-JWTToken',(event,args)=>{
+  event.returnValue  = userManager.getUser().jwtToken;
+})
+
+ipcMain.on('synchronous-get-OtherPublicKey',(event,args)=>{
+  event.returnValue  = userManager.getUser().keysChain[args];
+})
+
+ipcMain.on('synchronous-get-MessagesChain',(event,args)=>{
+  event.returnValue  = userManager.getUser().messagesChain[args];
+})
+
+//Setter
+ipcMain.on('synchronous-set-JWTToken',(event,args)=>{
+  event.returnValue  = userManager.getUser().jwtToken=args;
+  event.returnValue=true;
+})
+
+ipcMain.on('synchronous-add-OtherPublicKey',(event,args)=>{
+  //userManager.getUser().keysChain[args];
+  event.returnValue=true;
+})
+
+ipcMain.on('synchronous-add-OtherPublicKey',(event,args)=>{
+  //event.returnValue  = userManager.getUser().messagesChain[args];
+  event.returnValue=true;
+})
+

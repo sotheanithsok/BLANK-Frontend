@@ -83,6 +83,9 @@ class UserManager {
     getUser() {
         return this.currentUser;
     }
+    setUser(user){
+        this.currentUser=user;
+    }
 }
 
 const um = new UserManager();

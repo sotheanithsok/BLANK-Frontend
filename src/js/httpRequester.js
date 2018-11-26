@@ -1,5 +1,4 @@
 const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
-const app = require('./app');
 const { ipcRenderer } = require('electron');
 /**
  * This ia a http requester
@@ -45,7 +44,7 @@ class HttpRequester {
         request.post('/messages',
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-get-JWTToken')
                 },
                 body: {
                     receiver: receiver,
@@ -66,7 +65,7 @@ class HttpRequester {
         request.get('/messages',
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-get-JWTToken')
                 }
             }, (err, res, body) => {
                 console.log(body);
@@ -81,7 +80,7 @@ class HttpRequester {
         request.get('/messagesAll',
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-get-JWTToken')
                 }
             }, (err, res, body) => {
                 console.log(body);
@@ -94,20 +93,16 @@ class HttpRequester {
      * 
      * @param {*} name complete or partial parts of a name 
      */
-    searchUserByName(name) {
-        let k = ipcRenderer.sendSync('synchronous-get-userManager');
-        k.currentUser.RSAPublicKey="HELLOTHERE"
-        setTimeout(()=>{
-            ipcRenderer.send('print');
-        },1);
-        
+    searchUserByName(name) {        
         request.get('/names/' + name,
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-get-JWTToken')
                 }
             }, (err, res, body) => {
-                console.log(body);
+                if(!err && res.statusCode===200){
+                    app.updateSearchResult(body);
+                }
             }
         )
     }

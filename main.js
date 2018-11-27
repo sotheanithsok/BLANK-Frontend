@@ -107,15 +107,6 @@ ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
   event.returnValue=true;
 })
 
-// //Data transfers
-// ipcMain.on('asynchronous-main-searchUsersByName',(event,args)=>{
-//   win.webContents.send('asynchronous-httpRequester-searchUsersByName')
-// })
-
-// ipcMain.on('asynchronous-main-updateSearchResult',(event,args)=>{
-//   win.webContents.send('asynchronous-httpRequester-updateSearchResult',args);
-// })
-
-// ipcMain.on('asynchronous-main-clearSearchResult',(event,args)=>{
-//   win.webContents.send('asynchronous-httpRequester-clearSearchResult',args);
-// })
+ipcMain.on('asynchronous-request-updateMessages',(event,args)=>{
+  event.sender.send('asynchronous-reply-updateMessages', 'HelloThere')
+})

@@ -65,5 +65,5 @@ class Decapsulator {
     }
 
 }
-const decapsulator = new Decapsulator();
-module.exports = decapsulator;
+
+module.exports = Decapsulator;

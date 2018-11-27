@@ -1,31 +1,52 @@
-
 const messageInput = document.getElementById('message-input-box');
 const userSearchInput = document.getElementById('search-user-field');
 
-
 function startFilterSearch() {
     if (userSearchInput.value.length > 0) {
-       hr.searchUsersByName(userSearchInput.value);
+        httpRequester.searchUsersByName(userSearchInput.value);
+    }else{
+        while(proxies.searchResult.length>0){
+            proxies.searchResult.pop();
+        }
     }
 }
 
 function endSearch() {
-    while(obj.searchResult.length>0){
-        obj.searchResult.pop();
-    }
+    setTimeout(function(){
+        while(proxies.searchResult.length>0){
+            proxies.searchResult.pop();
+        }
+    },150);
 }
 
 function sendMessage() {
-    let found = false;
-    for (let i = 0; i < users.length; i++) {
-        if (users[i] === messageInput.value) {
-            delete users[i];
-            found = true;
-            break;
-        }
-    }
-    if (!found) {
-        users.push(messageInput.value);
-    }
+    target.value=messageInput.value;
+}
+
+
+function updateMessages(){
 
 }
+
+let target={
+    _value:'',
+    set value(v){
+        this._value=v; 
+        this.disable();     
+    },
+    get value(){
+        this.disable()
+        return this._value;
+    }, 
+    disable(){
+        if(this._value===''){
+            messageInput.disabled =true;
+        }else{
+            messageInput.disabled =false;
+        }
+    }
+}
+
+ipcRenderer.on('asynchronous-reply-updateMessages',(event,args)=>{
+    console.log(args);
+})

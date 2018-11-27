@@ -15,7 +15,7 @@
 <body>
     <div id="main-container">
         <div id="left-container">
-            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()" onfocusout="endSearch()"  type="search">
+            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()" onclick="startFilterSearch()" onfocusout="endSearch()"  type="search">
             <div id="users-container"></div>
             <div id=search-result-container></div>
         </div>
@@ -28,8 +28,7 @@
         </div>
     </div>
 </body>
+<script src="../js/import.js"></script>
 <script src="../js/app.js"></script>
-<script src="../js/httpRequester.js"></script>
-<script src="../js/proxies.js"></script>
 
 </html>

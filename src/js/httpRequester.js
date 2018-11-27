@@ -1,5 +1,4 @@
-const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
-const {ipcRenderer}=require('electron');
+
 /**
  * This ia a http requester
  */
@@ -101,11 +100,11 @@ class HttpRequester {
                 }
             }, (err, res, body) => {
                 if(!err && res.statusCode===200){
-                    while(obj.searchResult.length>0){
-                        obj.searchResult.pop();
+                    while(proxies.searchResult.length>0){
+                        proxies.searchResult.pop();
                     }
                     body.forEach(element => {
-                        obj.searchResult.push(element.name);
+                        proxies.searchResult.push(element.name);
                     });
                 }
             }
@@ -113,4 +112,4 @@ class HttpRequester {
     }
 
 }
-const hr = new HttpRequester();
+module.exports=HttpRequester;

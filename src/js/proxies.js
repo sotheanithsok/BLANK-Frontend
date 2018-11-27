@@ -17,7 +17,7 @@ class Proxies {
                 if (value.hasOwnProperty('sender') && value.hasOwnProperty('message') && value.sender.trim() && value.sender.trim()) {
                     value.timestamp = Date.now();
                     target[property] = value;
-                    obj.createMessageElement(value.sender, value.message, value.timestamp);
+                    proxies.createMessageElement(value.sender, value.message, value.timestamp);
                 }
                 return true;
             },
@@ -29,7 +29,7 @@ class Proxies {
              */
             deleteProperty(target, property) {
                 if (property in target) {
-                    obj.removeMessageElement(target[property].sender, target[property].message, target[property].timestamp);
+                    proxies.removeMessageElement(target[property].sender, target[property].message, target[property].timestamp);
                     target.splice(property, 1);
                 }
                 return true;
@@ -39,20 +39,24 @@ class Proxies {
         this.users = new Proxy([], {
             set(target, property, value, receiver) {
                 if (property != 'length') {
+                    let found = false;
                     target.forEach((v) => {
                         if (v === value) {
-                            return true;
+                            found = true;
+                            return undefined;
                         }
                     })
-                    target[property] = value;
-                    obj.createUserElement(value);
+                    if (!found) {
+                        target[property] = value;
+                        proxies.createUserElement(value);
+                    }
                 }
 
                 return true;
             },
             deleteProperty(target, property) {
                 if (property in target) {
-                    obj.removeUserElement(target[property]);
+                    proxies.removeUserElement(target[property]);
                     target.splice(property, 1);
                 }
                 return true;
@@ -62,20 +66,24 @@ class Proxies {
         this.searchResult = new Proxy([], {
             set(target, property, value, receiver) {
                 if (property != 'length') {
+                    let found = false;
                     target.forEach((v) => {
                         if (v === value) {
-                            return true;
+                            found = true;
+                            return undefined;
                         }
                     })
-                    target[property] = value;
-                    obj.createResultedUserElement(value);
+                    if (!found) {
+                        target[property] = value;
+                        proxies.createResultedUserElement(value);
+                    }
                 }
 
                 return true;
             },
             deleteProperty(target, property) {
                 if (property in target) {
-                    obj.removeResultedUserElement(target[property]);
+                    proxies.removeResultedUserElement(target[property]);
                     target.splice(property, 1);
                 }
                 return true;
@@ -84,11 +92,11 @@ class Proxies {
         });
     }
     /**
-    * A helper function uses to create html message element.
-    * @param {*} sender 
-    * @param {*} message 
-    * @param {*} timestamp 
-    */
+     * A helper function uses to create html message element.
+     * @param {*} sender 
+     * @param {*} message 
+     * @param {*} timestamp 
+     */
     createMessageElement(sender, message, timestamp) {
         let button = document.createElement('button');
         let text = document.createElement('pre');
@@ -129,6 +137,9 @@ class Proxies {
         button.appendChild(document.createTextNode(name));
         button.setAttribute('tID', btoa(name));
         usersContainer.appendChild(button);
+        button.onclick=function(){
+            ipcRenderer.send('asynchronous-request-updateMessages',name);
+        }
     }
 
     /**
@@ -153,6 +164,9 @@ class Proxies {
         button.appendChild(document.createTextNode(name));
         button.setAttribute('tID', btoa(name));
         searchResultContainer.appendChild(button);
+        button.onclick = function () {
+            proxies.users.push(name);
+        }
     }
 
     /**
@@ -168,4 +182,5 @@ class Proxies {
         });
     }
 }
-const obj = new Proxies();
+
+module.exports=Proxies;

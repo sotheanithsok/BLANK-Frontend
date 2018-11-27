@@ -86,5 +86,5 @@ class Encapsulator {
         }
     }
 }
-const encapsulator=new Encapsulator();
-module.exports = encapsulator;
+
+module.exports = Encapsulator;

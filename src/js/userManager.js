@@ -1,8 +1,8 @@
 const path = './resources/users/';
 const crypto = require('crypto');
 const fs = require('fs');
-const encapsulator = require('./encapsulator');
-const decapsulator = require('./decapsulator');
+const encapsulator = new(require('./encapsulator'));
+const decapsulator = new(require('./decapsulator'));
 const User = require('./user');
 
 

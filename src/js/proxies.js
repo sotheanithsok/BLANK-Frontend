@@ -68,7 +68,6 @@ class Proxies {
                         }
                     })
                     target[property] = value;
-                    console.log(this);
                     obj.createResultedUserElement(value);
                 }
 

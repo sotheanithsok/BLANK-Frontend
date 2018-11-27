@@ -66,7 +66,7 @@ app.on('activate', () => {
 let userManager=require('./src/js/userManager');
 userManager.loadUser('tester1','$2njD7Tt%d');
 // console.log(userManager.currentUser);
-// userManager.currentUser.jwtToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyNTgwMTUsImV4cCI6MTU0Mzg2MjgxNSwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJKb2huLTQyMDUifQ.xu1FZPmbN1e3vtunrql-PNURIKefpXuWIsIWBbGp5pg';
+// userManager.currentUser.jwtToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyODAzMzEsImV4cCI6MTU0Mzg4NTEzMSwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJKb2huLTIzMTAifQ.wSCgzWvWBUGAhtz44zsbreBJG4_WfSo67pm_Y2PGyiE';
 // userManager.saveUser('tester1','$2njD7Tt%d');
 
 //IPC communication

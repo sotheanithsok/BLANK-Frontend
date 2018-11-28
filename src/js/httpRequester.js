@@ -28,7 +28,22 @@ class HttpRequester {
      * @param {*} passphrase super secret.
      */
     login(username, passphrase) {
-
+        request.post(
+            '/login',
+            {
+                body: {
+                    username: username,
+                    password: passphrase
+                }
+            },
+            (err, res, body)=>{
+                if(!err&&res.statusCode===200){
+                    ipcRenderer.send('asynchronous-updateJWT',{username:username, passphrase:passphrase, token:body.token});
+                    document.getElementById('username').value ='';
+                    document.getElementById('password').value ='';
+                    
+                }
+            })
     }
 
     /**
@@ -99,8 +114,8 @@ class HttpRequester {
                     bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
                 }
             }, (err, res, body) => {
-                if(!err && res.statusCode===200){
-                    while(proxies.searchResult.length>0){
+                if (!err && res.statusCode === 200) {
+                    while (proxies.searchResult.length > 0) {
                         proxies.searchResult.pop();
                     }
                     body.forEach(element => {
@@ -112,4 +127,4 @@ class HttpRequester {
     }
 
 }
-module.exports=HttpRequester;
+module.exports = HttpRequester;

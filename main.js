@@ -24,7 +24,7 @@ function createWindow() {
   })
 
   // and load the index.html of the app.
-  win.loadFile('./src/html/app.html')
+  win.loadFile('./src/html/login.html')
 
   // Open the DevTools.
   win.webContents.openDevTools()
@@ -115,4 +115,8 @@ ipcMain.on('asynchronous-request-updateMessages',(event,args)=>{
     userManager.saveUser(username,password)
   }
   event.sender.send('asynchronous-reply-updateMessages',  userManager.currentUser.messagesChain)
+})
+
+ipcMain.on('asynchronous-updateJWT',(event,args)=>{
+  console.log(args)
 })

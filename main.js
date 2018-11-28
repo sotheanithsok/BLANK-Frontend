@@ -1,7 +1,15 @@
+// Enable live reload for Electron too
+require('electron-reload')(__dirname, {
+    // Note that the path to electron may vary according to the main file
+    electron: require(`${__dirname}/node_modules/electron`)
+});
+
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
+  ipcMain
 } = require('electron')
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -11,11 +19,12 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    useContentSize:true
   })
 
   // and load the index.html of the app.
-  win.loadFile('./src/html/index.html')
+  win.loadFile('./src/html/app.html')
 
   // Open the DevTools.
   win.webContents.openDevTools()
@@ -52,4 +61,58 @@ app.on('activate', () => {
 })
 
 // In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+
+//SingleInstanance
+let username='tester1';
+let password='$2njD7Tt%d';
+let userManager=require('./src/js/userManager');
+userManager.loadUser(username,password);
+// console.log(userManager.currentUser);
+// userManager.currentUser.jwtToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyODAzMzEsImV4cCI6MTU0Mzg4NTEzMSwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJKb2huLTIzMTAifQ.wSCgzWvWBUGAhtz44zsbreBJG4_WfSo67pm_Y2PGyiE';
+// userManager.saveUser('tester1','$2njD7Tt%d');
+
+//IPC communication
+//Getter
+ipcMain.on('synchronous-main-getRSAPublicKey',(event,args)=>{
+  event.returnValue  = userManager.getUser().RSAPublicKey;
+})
+
+ipcMain.on('synchronous-main-getRSAPrivateKey',(event,args)=>{
+  event.returnValue  = userManager.getUser().RSAPrivateKey;
+})
+
+ipcMain.on('synchronous-main-getJWTToken',(event,args)=>{
+  event.returnValue  = userManager.getUser().jwtToken;
+})
+
+ipcMain.on('synchronous-main-getOtherPublicKey',(event,args)=>{
+  event.returnValue  = userManager.getUser().keysChain[args];
+})
+
+ipcMain.on('synchronous-main-getMessagesChain',(event,args)=>{
+  event.returnValue  = userManager.getUser().messagesChain[args];
+})
+
+//Setter
+ipcMain.on('synchronous-main-setJWTToken',(event,args)=>{
+  event.returnValue  = userManager.getUser().jwtToken=args;
+  event.returnValue=true;
+})
+
+ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
+  //userManager.getUser().keysChain[args];
+  event.returnValue=true;
+})
+
+ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
+  //event.returnValue  = userManager.getUser().messagesChain[args];
+  event.returnValue=true;
+})
+
+ipcMain.on('asynchronous-request-updateMessages',(event,args)=>{
+  if(userManager.currentUser.messagesChain[args]===undefined){
+    userManager.currentUser.messagesChain[args]=[];
+    userManager.saveUser(username,password)
+  }
+  event.sender.send('asynchronous-reply-updateMessages',  userManager.currentUser.messagesChain)
+})

@@ -1,7 +1,3 @@
-const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
-
-const userManager = require('./userManager');
-
 
 /**
  * This ia a http requester
@@ -47,7 +43,7 @@ class HttpRequester {
         request.post('/messages',
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
                 },
                 body: {
                     receiver: receiver,
@@ -68,7 +64,7 @@ class HttpRequester {
         request.get('/messages',
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
                 }
             }, (err, res, body) => {
                 console.log(body);
@@ -83,7 +79,7 @@ class HttpRequester {
         request.get('/messagesAll',
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
                 }
             }, (err, res, body) => {
                 console.log(body);
@@ -96,18 +92,24 @@ class HttpRequester {
      * 
      * @param {*} name complete or partial parts of a name 
      */
-    searchUserByName(name) {
+    searchUsersByName(name) {
         request.get('/names/' + name,
             {
                 auth: {
-                    bearer: userManager.getUser().jwtToken
+                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
                 }
             }, (err, res, body) => {
-                console.log(body);
+                if(!err && res.statusCode===200){
+                    while(proxies.searchResult.length>0){
+                        proxies.searchResult.pop();
+                    }
+                    body.forEach(element => {
+                        proxies.searchResult.push(element.name);
+                    });
+                }
             }
         )
     }
 
 }
-const hr = new HttpRequester();
-module.exports = hr;
+module.exports=HttpRequester;

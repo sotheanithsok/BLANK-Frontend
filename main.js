@@ -63,8 +63,10 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 
 //SingleInstanance
+let username='tester1';
+let password='$2njD7Tt%d';
 let userManager=require('./src/js/userManager');
-userManager.loadUser('tester1','$2njD7Tt%d');
+userManager.loadUser(username,password);
 // console.log(userManager.currentUser);
 // userManager.currentUser.jwtToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyODAzMzEsImV4cCI6MTU0Mzg4NTEzMSwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJKb2huLTIzMTAifQ.wSCgzWvWBUGAhtz44zsbreBJG4_WfSo67pm_Y2PGyiE';
 // userManager.saveUser('tester1','$2njD7Tt%d');
@@ -108,5 +110,9 @@ ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
 })
 
 ipcMain.on('asynchronous-request-updateMessages',(event,args)=>{
-  event.sender.send('asynchronous-reply-updateMessages', 'HelloThere')
+  if(userManager.currentUser.messagesChain[args]===undefined){
+    userManager.currentUser.messagesChain[args]=[];
+    userManager.saveUser(username,password)
+  }
+  event.sender.send('asynchronous-reply-updateMessages',  userManager.currentUser.messagesChain)
 })

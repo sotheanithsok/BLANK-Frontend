@@ -15,20 +15,20 @@
 <body>
     <div id="main-container">
         <div id="left-container">
-            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()" onclick="startFilterSearch()" onfocusout="endSearch()"  type="search">
+            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()"
+                onclick="startFilterSearch()" onfocusout="endSearch()" type="search">
             <div id="users-container"></div>
             <div id=search-result-container></div>
         </div>
         <div id="right-container">
             <div id="messages-container"></div>
             <div id="message-controller-container">
-                <textarea id="message-input-box" placeholder="Write a message..."></textarea>
-                <button onclick="sendMessage()">Send</button>
+                <textarea id="message-input-box" disabled onclick="checkForPublicKey()" placeholder="Write a message..."></textarea>
+                <button disabled onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
+    <script src="../js/import.js"></script>
+    <script src="../js/app.js"></script>
 </body>
-<script src="../js/import.js"></script>
-<script src="../js/app.js"></script>
-
 </html>

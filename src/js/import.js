@@ -4,3 +4,4 @@ const httpRequester = new (require('../js/httpRequester'));
 const proxies = new (require('../js/proxies'));
 const encapsulator=new (require('../js/encapsulator'));
 const decapsulator = new (require('../js/decapsulator'));
+const prompt = require('electron-prompt');

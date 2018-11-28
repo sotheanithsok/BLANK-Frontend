@@ -48,7 +48,7 @@ let target = {
 }
 
 ipcRenderer.on('asynchronous-reply-updateMessages', (event, args) => {
-    target=args.name;
+    target.value = args.name;
     while (proxies.messages.length > 0) {
         proxies.messages.pop();
     }
@@ -57,15 +57,46 @@ ipcRenderer.on('asynchronous-reply-updateMessages', (event, args) => {
             if (element.type === 'To') {
                 proxies.messages.push({
                     sender: 'You',
-                    message:  element.message
+                    message: element.message
                 });
-            }else{
+            } else {
                 proxies.messages.push({
                     sender: target,
-                    message:  element.message
+                    message: element.message
                 });
             }
         });
     }
 
 })
+
+
+function promptForPublicKey() {
+    prompt({
+            title: 'RSA Public Key',
+            label: `${target.value}\'s public key:`,
+            value: '',
+            resizable: true,
+            inputAttrs: {
+                type: 'text'
+            },
+            type: 'input'
+        })
+        .then((r) => {
+            if (r != null) {
+                if(r===''){
+                    promptForPublicKey();
+                }
+            }
+        })
+        .catch(console.error);
+}
+
+function checkForPublicKey() {
+    if (target.value != '') {
+        let public = ipcRenderer.sendSync('synchronous-main-getOtherPublicKey', target.value);
+        if (public === null) {
+            promptForPublicKey();
+        }
+    }
+}

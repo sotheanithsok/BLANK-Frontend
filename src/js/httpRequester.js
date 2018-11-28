@@ -88,12 +88,13 @@ class HttpRequester {
                         key: element.key,
                         tag: element.tag
                     }, ipcRenderer.sendSync('synchronous-main-getRSAPrivateKey'));
-
-                    ipcRenderer.send('asynchronous-main-addMessage', {
-                        sender:element.sender,
-                        type:'From',
-                        message:message
-                    })
+                    if(!message){
+                        ipcRenderer.send('asynchronous-main-addMessage', {
+                            sender:element.sender,
+                            type:'From',
+                            message:message
+                        })
+                    }
                 });
             }
         })

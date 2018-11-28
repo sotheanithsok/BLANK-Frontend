@@ -1,8 +1,8 @@
 // Enable live reload for Electron too
-require('electron-reload')(__dirname, {
-  // Note that the path to electron may vary according to the main file
-  electron: require(`${__dirname}/node_modules/electron`)
-});
+// require('electron-reload')(__dirname, {
+//   // Note that the path to electron may vary according to the main file
+//   electron: require(`${__dirname}/node_modules/electron`)
+// });
 
 const {
   app,
@@ -76,6 +76,10 @@ ipcMain.on('synchronous-main-getJWTToken', (event, args) => {
   event.returnValue = userManager.getUser().jwtToken;
 })
 
+ipcMain.on('synchronous-main-getOtherPublicKey', (event, args) => {
+  event.returnValue = userManager.getUser().keysChain[args];
+})
+
 
 ipcMain.on('asynchronous-main-addMessage', (event, args) => {
   if (userManager.currentUser.messagesChain[args.sender] === undefined) {
@@ -109,3 +113,4 @@ ipcMain.on('asynchronous-updateJWT', (event, args) => {
   password = args.passphrase;
   win.loadFile('./src/html/app.html')
 })
+

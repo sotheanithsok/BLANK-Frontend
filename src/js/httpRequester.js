@@ -1,4 +1,3 @@
-
 /**
  * This ia a http requester
  */
@@ -29,19 +28,22 @@ class HttpRequester {
      */
     login(username, passphrase) {
         request.post(
-            '/login',
-            {
+            '/login', {
                 body: {
                     username: username,
                     password: passphrase
                 }
             },
-            (err, res, body)=>{
-                if(!err&&res.statusCode===200){
-                    ipcRenderer.send('asynchronous-updateJWT',{username:username, passphrase:passphrase, token:body.token});
-                    document.getElementById('username').value ='';
-                    document.getElementById('password').value ='';
-                    
+            (err, res, body) => {
+                if (!err && res.statusCode === 200) {
+                    ipcRenderer.send('asynchronous-updateJWT', {
+                        username: username,
+                        passphrase: passphrase,
+                        token: body.token
+                    });
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+
                 }
             })
     }
@@ -55,51 +57,59 @@ class HttpRequester {
      * @param {*} tag tag uses to verify the message.
      */
     postMessage(receiver, content, key, tag) {
-        request.post('/messages',
-            {
-                auth: {
-                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
-                },
-                body: {
-                    receiver: receiver,
-                    content: content,
-                    key: key,
-                    tag: tag
-                }
-            }, (err, res, body) => {
-                console.log(res.statusCode);
+        request.post('/messages', {
+            auth: {
+                bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
+            },
+            body: {
+                receiver: receiver,
+                content: content,
+                key: key,
+                tag: tag
             }
-        )
+        }, (err, res, body) => {
+            console.log(res.statusCode);
+        })
     }
 
     /**
      * A get request to obtain unread messages. It is authenticated with JwtToken.
      */
     getMessage() {
-        request.get('/messages',
-            {
-                auth: {
-                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
-                }
-            }, (err, res, body) => {
-                console.log(body);
+        request.get('/messages', {
+            auth: {
+                bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
             }
-        )
+        }, (err, res, body) => {
+            if (!err && res.statusCode === 200) {
+                body.forEach(element => {
+                    let message = decapsulator.decryptPGP({
+                        content: element.content,
+                        key: element.key,
+                        tag: element.tag
+                    }, ipcRenderer.sendSync('synchronous-main-getRSAPrivateKey'));
+
+                    ipcRenderer.send('asynchronous-main-addMessage', {
+                        sender:element.sender,
+                        type:'From',
+                        message:message
+                    })
+                });
+            }
+        })
     }
 
     /**
      * A get request to obtain all messages including read and unread. It is authenticated with JwtToken.
      */
     getAllMessages() {
-        request.get('/messagesAll',
-            {
-                auth: {
-                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
-                }
-            }, (err, res, body) => {
-                console.log(body);
+        request.get('/messagesAll', {
+            auth: {
+                bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
             }
-        )
+        }, (err, res, body) => {
+            console.log(body);
+        })
     }
 
     /**
@@ -108,22 +118,20 @@ class HttpRequester {
      * @param {*} name complete or partial parts of a name 
      */
     searchUsersByName(name) {
-        request.get('/names/' + name,
-            {
-                auth: {
-                    bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
-                }
-            }, (err, res, body) => {
-                if (!err && res.statusCode === 200) {
-                    while (proxies.searchResult.length > 0) {
-                        proxies.searchResult.pop();
-                    }
-                    body.forEach(element => {
-                        proxies.searchResult.push(element.name);
-                    });
-                }
+        request.get('/names/' + name, {
+            auth: {
+                bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
             }
-        )
+        }, (err, res, body) => {
+            if (!err && res.statusCode === 200) {
+                while (proxies.searchResult.length > 0) {
+                    proxies.searchResult.pop();
+                }
+                body.forEach(element => {
+                    proxies.searchResult.push(element.name);
+                });
+            }
+        })
     }
 
 }

@@ -1,7 +1,7 @@
 // Enable live reload for Electron too
 require('electron-reload')(__dirname, {
-    // Note that the path to electron may vary according to the main file
-    electron: require(`${__dirname}/node_modules/electron`)
+  // Note that the path to electron may vary according to the main file
+  electron: require(`${__dirname}/node_modules/electron`)
 });
 
 const {
@@ -20,7 +20,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    useContentSize:true
+    useContentSize: true
   })
 
   // and load the index.html of the app.
@@ -63,60 +63,49 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 
 //SingleInstanance
-let username='tester1';
-let password='$2njD7Tt%d';
-let userManager=require('./src/js/userManager');
-userManager.loadUser(username,password);
-// console.log(userManager.currentUser);
-// userManager.currentUser.jwtToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDMyODAzMzEsImV4cCI6MTU0Mzg4NTEzMSwiYXVkIjoid3d3LmNnZW5jcnlwdGVkY2hhdC5tZSIsImlzcyI6IkNydXNoIG5leHQgZG9vcnMiLCJzdWIiOiJKb2huLTIzMTAifQ.wSCgzWvWBUGAhtz44zsbreBJG4_WfSo67pm_Y2PGyiE';
-// userManager.saveUser('tester1','$2njD7Tt%d');
+let username;
+let password;
+let userManager = require('./src/js/userManager');
 
 //IPC communication
-//Getter
-ipcMain.on('synchronous-main-getRSAPublicKey',(event,args)=>{
-  event.returnValue  = userManager.getUser().RSAPublicKey;
+ipcMain.on('synchronous-main-getRSAPrivateKey', (event, args) => {
+  event.returnValue = userManager.getUser().RSAPrivateKey;
 })
 
-ipcMain.on('synchronous-main-getRSAPrivateKey',(event,args)=>{
-  event.returnValue  = userManager.getUser().RSAPrivateKey;
+ipcMain.on('synchronous-main-getJWTToken', (event, args) => {
+  event.returnValue = userManager.getUser().jwtToken;
 })
 
-ipcMain.on('synchronous-main-getJWTToken',(event,args)=>{
-  event.returnValue  = userManager.getUser().jwtToken;
-})
 
-ipcMain.on('synchronous-main-getOtherPublicKey',(event,args)=>{
-  event.returnValue  = userManager.getUser().keysChain[args];
-})
-
-ipcMain.on('synchronous-main-getMessagesChain',(event,args)=>{
-  event.returnValue  = userManager.getUser().messagesChain[args];
-})
-
-//Setter
-ipcMain.on('synchronous-main-setJWTToken',(event,args)=>{
-  event.returnValue  = userManager.getUser().jwtToken=args;
-  event.returnValue=true;
-})
-
-ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
-  //userManager.getUser().keysChain[args];
-  event.returnValue=true;
-})
-
-ipcMain.on('synchronous-main-addOtherPublicKey',(event,args)=>{
-  //event.returnValue  = userManager.getUser().messagesChain[args];
-  event.returnValue=true;
-})
-
-ipcMain.on('asynchronous-request-updateMessages',(event,args)=>{
-  if(userManager.currentUser.messagesChain[args]===undefined){
-    userManager.currentUser.messagesChain[args]=[];
-    userManager.saveUser(username,password)
+ipcMain.on('asynchronous-main-addMessage', (event, args) => {
+  if (userManager.currentUser.messagesChain[args.sender] === undefined) {
+    userManager.currentUser.messagesChain[args] = [];
+    userManager.saveUser(username, password)
   }
-  event.sender.send('asynchronous-reply-updateMessages',  userManager.currentUser.messagesChain)
+  userManager.currentUser.messagesChain[args.sender].push({
+    type: args.type,
+    message: args.message
+  })
+
 })
 
-ipcMain.on('asynchronous-updateJWT',(event,args)=>{
-  console.log(args)
+ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
+  if (userManager.currentUser.messagesChain[args] === undefined) {
+    userManager.currentUser.messagesChain[args] = [];
+    userManager.saveUser(username, password)
+  }
+  event.sender.send('asynchronous-reply-updateMessages', {
+    name: args,
+    messages: userManager.currentUser.messagesChain[args]
+  })
+})
+
+
+ipcMain.on('asynchronous-updateJWT', (event, args) => {
+  userManager.loadUser(args.username, args.passphrase);
+  userManager.getUser().jwtToken = args.token;
+  userManager.saveUser(args.username, args.passphrase);
+  username = args.username;
+  password = args.passphrase;
+  win.loadFile('./src/html/app.html')
 })

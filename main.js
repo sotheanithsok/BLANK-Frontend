@@ -7,13 +7,14 @@
 const {
   app,
   BrowserWindow,
-  ipcMain
+  ipcMain,
+  Menu
 } = require('electron')
-
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+let mainMenu
 
 function createWindow() {
   // Create the browser window.
@@ -41,7 +42,13 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow();
+  //Build menu
+  mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  Menu.setApplicationMenu(mainMenu);
+}
+)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -59,6 +66,58 @@ app.on('activate', () => {
     createWindow()
   }
 })
+let mainMenuTemplate = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Show/Edit your RSA keys',
+        click() {
+          win.webContents.send('asynchronous-main-showKeys', {
+            RSAPublicKey: userManager.currentUser.RSAPublicKey,
+            RSAPrivateKey: userManager.currentUser.RSAPrivateKey
+          })
+        }
+      },
+      {
+        id: 'PK',
+        label: 'Show known public keys',
+        click() {
+          
+        }
+      },
+      {
+        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        role: 'quit'
+      }
+    ]
+  }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // In this file you can include the rest of your app's specific main process
 
@@ -80,6 +139,16 @@ ipcMain.on('synchronous-main-getOtherPublicKey', (event, args) => {
   event.returnValue = userManager.getUser().keysChain[args];
 })
 
+ipcMain.on('asynchronous-main-setOtherPublicKey', (event, args) => {
+  userManager.getUser().keysChain[args.name] = args.key;
+  console.log(userManager)
+})
+
+ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
+  userManager.getUser().RSAPrivateKey = args.RSAPrivateKey;
+  userManager.getUser().RSAPublicKey = args.RSAPublicKey;
+  userManager.saveUser(username, password);
+})
 
 ipcMain.on('asynchronous-main-addMessage', (event, args) => {
   if (userManager.currentUser.messagesChain[args.sender] === undefined) {

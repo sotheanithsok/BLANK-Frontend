@@ -18,18 +18,24 @@ class Decapsulator {
      * @param {*} privateKey RSA private key.
      */
     decryptPGP(encrypted, privateKey) {
-        let asekey = crypto.privateDecrypt(privateKey, Buffer.from(encrypted.key, 'hex'));
-        let tag = Buffer.from(encrypted.tag, 'hex');
-
-        //extract the first 32 bytes from the content to get the iv.
-        let iv = Buffer.from(encrypted.content.substring(0, 32), 'hex');
-
-        //Decript the content
-        var decipher = crypto.createDecipheriv(this._algorithm, asekey, iv)
-        decipher.setAuthTag(tag);
-        var decrypt = decipher.update(encrypted.content.substring(32), 'hex', 'utf8')
-        decrypt += decipher.final('utf8');
-        return decrypt;
+        try{
+            privateKey=this.unbackslash(privateKey);
+            let asekey = crypto.privateDecrypt(privateKey, Buffer.from(encrypted.key, 'hex'));
+            let tag = Buffer.from(encrypted.tag, 'hex');
+    
+            //extract the first 32 bytes from the content to get the iv.
+            let iv = Buffer.from(encrypted.content.substring(0, 32), 'hex');
+    
+            //Decript the content
+            var decipher = crypto.createDecipheriv(this._algorithm, asekey, iv)
+            decipher.setAuthTag(tag);
+            var decrypt = decipher.update(encrypted.content.substring(32), 'hex', 'utf8')
+            decrypt += decipher.final('utf8');
+            return decrypt;
+        }catch(err){
+            console.log('Failed to decrypt data')
+        }
+        
     }
 
     /**
@@ -62,6 +68,15 @@ class Decapsulator {
         } catch (err) {
             console.log('Failed to decrypt with passphrases')
         }
+    }
+    unbackslash(s) {
+        return s.replace(/\\([\\rnt'"])/g, function(match, p1) {
+            if (p1 === 'n') return '\n';
+            if (p1 === 'r') return '\r';
+            if (p1 === 't') return '\t';
+            if (p1 === '\\') return '\\';
+            return p1;       // unrecognised escape
+        });
     }
 
 }

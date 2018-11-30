@@ -6,6 +6,3 @@ const encapsulator=new (require('../js/encapsulator'));
 const decapsulator = new (require('../js/decapsulator'));
 const prompt = require('electron-prompt');
 const jQuery=require('jquery');
-// const vex=require('vex-js');
-// vex.registerPlugin(require('vex-dialog'))
-// vex.defaultOptions.className = 'vex-theme-os'

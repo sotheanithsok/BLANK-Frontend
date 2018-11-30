@@ -1,5 +1,6 @@
 const messageInput = document.getElementById('message-input-box');
 const userSearchInput = document.getElementById('search-user-field');
+const sendButton=document.getElementById('sendButton');
 
 function startFilterSearch() {
     if (userSearchInput.value.length > 0) {
@@ -20,7 +21,20 @@ function endSearch() {
 }
 
 function sendMessage() {
-    target.value = messageInput.value;
+    if(messageInput.value!=''){
+        let encrypted=encapsulator.encryptPGP(messageInput.value,ipcRenderer.sendSync('synchronous-main-getOtherPublicKey',target.value))
+        httpRequester.postMessage(target.value,encrypted.content,encrypted.key,encrypted.tag)
+        ipcRenderer.send('asynchronous-main-addMessage',{
+            sender:target.value,
+            type:'To',
+            message:messageInput.value
+        })
+        proxies.messages.push({
+            sender: 'You',
+            message: messageInput.value
+        });
+
+    }
 }
 
 function checkForMessage() {
@@ -64,7 +78,7 @@ ipcRenderer.on('asynchronous-reply-updateMessages', (event, args) => {
                 });
             } else {
                 proxies.messages.push({
-                    sender: target,
+                    sender: target.value,
                     message: element.message
                 });
             }
@@ -83,6 +97,7 @@ function promptForPublicKey(message) {
         callback: function (value) {
             if (value === false) {
             } else {
+                value=JSON.parse("\""+value+"\"")
                 let testResult = encapsulator.encryptPGP('Hello', value);
                 if (testResult) {
                     ipcRenderer.send('asynchronous-main-setOtherPublicKey', {
@@ -90,7 +105,7 @@ function promptForPublicKey(message) {
                         key: value
                     })
                 } else {
-                    promptForPublicKey('Invalid RSA public key');
+                    promptForPublicKey('Invalid RSA public key!!!');
                 }
             }
         }
@@ -111,15 +126,15 @@ ipcRenderer.on('asynchronous-main-showKeys', (event, args) => {
 })
 
 ipcRenderer.on('asynchronous-main-showOthersPublicKey', (event, args) => {
-    displayUserKeyPair(args.RSAPublicKey, args.RSAPrivateKey)
+    displayOtherKey(args.name, args.RSAPublicKey)
 })
 
 function displayUserKeyPair(publicKey, privateKey) {
     vex.dialog.open({
         message: 'Your RSA key pairs:',
         input: [
-            `<input name="publicKey" type="text" placeholder="Public Key" value="${publicKey}" required />`,
-            `<input name="privateKey" type="text" placeholder="Private Key" value="${privateKey}" required />`
+            '<input name="publicKey" type="text" placeholder="Public Key" value='+JSON.stringify(publicKey)+'required />',
+            '<input name="privateKey" type="text" placeholder="Private Key" value=' + JSON.stringify(privateKey) + '"required />'
         ].join(''),
         buttons: [
             jQuery.extend({}, vex.dialog.buttons.YES, { text: 'Save' }),
@@ -128,6 +143,8 @@ function displayUserKeyPair(publicKey, privateKey) {
         callback: function (data) {
             if (!data) {
             } else {
+                data.publicKey=(JSON.parse("\""+data.publicKey+"\""));
+                data.privateKey=(JSON.parse("\""+data.privateKey+"\""));
                 let m = encapsulator.encryptPGP('HelloWorld', data.publicKey)
                 let k = decapsulator.decryptPGP(m, data.privateKey)
                 if (k === 'HelloWorld') {
@@ -138,9 +155,52 @@ function displayUserKeyPair(publicKey, privateKey) {
                         })
                 } else {
                     displayUserKeyPair(publicKey, privateKey);
-                    vex.dialog.alert('Invalid key pair');
+                    vex.dialog.alert('Invalid RSA key pair!!!');
                 }
             }
         }
     })
+}
+
+function displayOtherKey(name, publicKey) {
+    vex.dialog.open({
+        message: `${name} public key:`,
+        input: [
+            '<input name="publicKey" type="text" placeholder="Public Key" value='+JSON.stringify(publicKey)+'required />',
+        ].join(''),
+        buttons: [
+            jQuery.extend({}, vex.dialog.buttons.YES, { text: 'Save' }),
+            jQuery.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+        ],
+        callback: function (data) {
+            if (!data) {
+            } else {
+                data.publicKey=(JSON.parse("\""+data.publicKey+"\""));
+                let m = encapsulator.encryptPGP('HelloWorld', data.publicKey)
+                if (m) {
+                    ipcRenderer.send('asynchronous-main-setOtherPublicKey', {
+                        name: name,
+                        key: data.publicKey
+                    })
+                } else {
+                    displayOtherKey(name, publicKey);
+                    vex.dialog.alert('Invalid RSA public key!!!');
+                }
+            }
+        }
+    })
+}
+
+function timerFunction(){
+    setInterval(()=>{
+        httpRequester.getMessage();
+    },1000)
+
+    setInterval(()=>{
+        if(target.value!=''){
+            if(ipcRenderer.sendSync('synchronous-main-getConversationLength',target.value)!=proxies.messages.length){
+                ipcRenderer.send('asynchronous-request-updateMessages',target.value);
+            }
+        }       
+    },250)
 }

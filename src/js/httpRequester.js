@@ -68,7 +68,6 @@ class HttpRequester {
                 tag: tag
             }
         }, (err, res, body) => {
-            console.log(res.statusCode);
         })
     }
 
@@ -82,13 +81,14 @@ class HttpRequester {
             }
         }, (err, res, body) => {
             if (!err && res.statusCode === 200) {
+                
                 body.forEach(element => {
                     let message = decapsulator.decryptPGP({
                         content: element.content,
                         key: element.key,
                         tag: element.tag
-                    }, ipcRenderer.sendSync('synchronous-main-getRSAPrivateKey'));
-                    if(!message){
+                    }, ipcRenderer.sendSync('synchronous-main-getRSAPrivateKey'));                    
+                    if(message){
                         ipcRenderer.send('asynchronous-main-addMessage', {
                             sender:element.sender,
                             type:'From',

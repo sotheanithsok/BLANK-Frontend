@@ -23,7 +23,7 @@
             <div id="messages-container"></div>
             <div id="message-controller-container">
                 <textarea id="message-input-box" disabled onclick="checkForPublicKey()" placeholder="Write a message..."></textarea>
-                <button disabled onclick="sendMessage()">Send</button>
+                <button id="sendButton" onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
@@ -34,6 +34,7 @@
     <script>vex.defaultOptions.className = 'vex-theme-os'</script>
     <link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex.css" />
     <link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex-theme-os.css" />
+    <script>timerFunction()</script>
 </body>
 
 </html>

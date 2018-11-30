@@ -19,7 +19,6 @@ class Decapsulator {
      */
     decryptPGP(encrypted, privateKey) {
         try{
-            privateKey=this.unbackslash(privateKey);
             let asekey = crypto.privateDecrypt(privateKey, Buffer.from(encrypted.key, 'hex'));
             let tag = Buffer.from(encrypted.tag, 'hex');
     
@@ -68,15 +67,6 @@ class Decapsulator {
         } catch (err) {
             console.log('Failed to decrypt with passphrases')
         }
-    }
-    unbackslash(s) {
-        return s.replace(/\\([\\rnt'"])/g, function(match, p1) {
-            if (p1 === 'n') return '\n';
-            if (p1 === 'r') return '\r';
-            if (p1 === 't') return '\t';
-            if (p1 === '\\') return '\\';
-            return p1;       // unrecognised escape
-        });
     }
 
 }

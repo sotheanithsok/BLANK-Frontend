@@ -11,6 +11,7 @@ const {
   Menu
 } = require('electron')
 
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -44,9 +45,8 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow();
-  //Build menu
-  mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-  Menu.setApplicationMenu(mainMenu);
+  Menu.setApplicationMenu(null);
+
 }
 )
 
@@ -66,37 +66,54 @@ app.on('activate', () => {
     createWindow()
   }
 })
-let mainMenuTemplate = [
-  {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Show/Edit your RSA keys',
-        click() {
-          win.webContents.send('asynchronous-main-showKeys', {
-            RSAPublicKey: userManager.currentUser.RSAPublicKey,
-            RSAPrivateKey: userManager.currentUser.RSAPrivateKey
-          })
+
+
+
+
+function buildMainMenu() {
+  let mainMenuTemplate = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Show/Edit your RSA keys',
+          click() {
+            win.webContents.send('asynchronous-main-showKeys', {
+              RSAPublicKey: userManager.currentUser.RSAPublicKey,
+              RSAPrivateKey: userManager.currentUser.RSAPrivateKey
+            })
+          }
+        },
+        {
+          id: 'PK',
+          label: 'Show known public keys'
+        },
+        {
+          accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+          role: 'quit'
         }
-      },
-      {
-        id: 'PK',
-        label: 'Show known public keys',
-        click() {
-          
-        }
-      },
-      {
-        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-        role: 'quit'
+      ]
+    }
+  ]
+
+  let pk = mainMenuTemplate[0].submenu[1].submenu = [];
+  let knownPK = Object.getOwnPropertyNames(userManager.currentUser.keysChain)
+  while (knownPK.length > 0) {
+    let name = knownPK.pop();
+    pk.push({
+      label: name,
+      click(){
+        win.webContents.send('asynchronous-main-showOthersPublicKey', {
+          RSAPublicKey: userManager.currentUser.RSAPublicKey,
+          name: name
+        })
       }
-    ]
+    });
   }
-]
 
-
-
-
+  mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  Menu.setApplicationMenu(mainMenu);
+}
 
 
 
@@ -141,7 +158,13 @@ ipcMain.on('synchronous-main-getOtherPublicKey', (event, args) => {
 
 ipcMain.on('asynchronous-main-setOtherPublicKey', (event, args) => {
   userManager.getUser().keysChain[args.name] = args.key;
-  console.log(userManager)
+  buildMainMenu();
+  userManager.saveUser(username,password);
+})
+
+ipcMain.on('synchronous-main-getConversationLength',(event,args)=>{
+  event.returnValue = userManager.getUser().messagesChain[args].length;
+  
 })
 
 ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
@@ -152,13 +175,13 @@ ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
 
 ipcMain.on('asynchronous-main-addMessage', (event, args) => {
   if (userManager.currentUser.messagesChain[args.sender] === undefined) {
-    userManager.currentUser.messagesChain[args] = [];
-    userManager.saveUser(username, password)
+    userManager.currentUser.messagesChain[args.sender] = [];
   }
   userManager.currentUser.messagesChain[args.sender].push({
     type: args.type,
     message: args.message
   })
+  userManager.saveUser(username,password);
 
 })
 
@@ -171,15 +194,19 @@ ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
     name: args,
     messages: userManager.currentUser.messagesChain[args]
   })
+  userManager.saveUser(username,password);
 })
 
 
 ipcMain.on('asynchronous-updateJWT', (event, args) => {
+  win.loadFile('./src/html/app.html')
   userManager.loadUser(args.username, args.passphrase);
   userManager.getUser().jwtToken = args.token;
   userManager.saveUser(args.username, args.passphrase);
   username = args.username;
   password = args.passphrase;
-  win.loadFile('./src/html/app.html')
+  win.webContents.on('dom-ready', () => {
+    buildMainMenu();
+  })
 })
 

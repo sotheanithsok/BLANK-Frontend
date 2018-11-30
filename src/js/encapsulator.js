@@ -16,7 +16,6 @@ class Encapsulator {
      * @param {*} publicKey RSA public key.
      */
     encryptPGP(text, publicKey) {
-        publicKey=this.unbackslash(publicKey);
         try {
             //Generate needed variables
             let aesKey = crypto.randomBytes(32); //32 Bytes = 256 bits
@@ -83,15 +82,6 @@ class Encapsulator {
         } catch (err) {
             console.log('Fail to encrypt with passphrases.')
         }
-    }
-    unbackslash(s) {
-        return s.replace(/\\([\\rnt'"])/g, function(match, p1) {
-            if (p1 === 'n') return '\n';
-            if (p1 === 'r') return '\r';
-            if (p1 === 't') return '\t';
-            if (p1 === '\\') return '\\';
-            return p1;       // unrecognised escape
-        });
     }
 }
 

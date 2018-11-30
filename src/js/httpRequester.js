@@ -109,7 +109,6 @@ class HttpRequester {
                 bearer: ipcRenderer.sendSync('synchronous-main-getJWTToken')
             }
         }, (err, res, body) => {
-            console.log(body);
         })
     }
 

@@ -136,9 +136,18 @@ class Proxies {
         let button = document.createElement('button');
         button.appendChild(document.createTextNode(name));
         button.setAttribute('tID', btoa(name));
-        usersContainer.appendChild(button);
-        button.onclick=function(){
-            ipcRenderer.send('asynchronous-request-updateMessages',name);
+        let k = null;
+
+        let children = usersContainer.childNodes;
+        for (let i = 0; i < children.length; i++) {
+            if (atob(children[i].getAttribute('tID')).localeCompare(name) === 1) {
+                k = children[i];
+                break;
+            }
+        }
+        usersContainer.insertBefore(button, k);
+        button.onclick = function () {
+            ipcRenderer.send('asynchronous-request-updateMessages', name);
         }
     }
 
@@ -160,12 +169,28 @@ class Proxies {
      * @param {*} name 
      */
     createResultedUserElement(name) {
+
         let button = document.createElement('button');
         button.appendChild(document.createTextNode(name));
         button.setAttribute('tID', btoa(name));
-        searchResultContainer.appendChild(button);
+        let k = null;
+        let children = searchResultContainer.childNodes;
+        for (let i = 0; i < children.length; i++) {
+            if (atob(children[i].getAttribute('tID')).localeCompare(name) === -1) {
+                k = children[i];
+                break;
+            }
+        }
+        searchResultContainer.insertBefore(button, k);
         button.onclick = function () {
             proxies.users.push(name);
+            let tID = btoa(name);
+            usersContainer.childNodes.forEach((element) => {
+                if (element.getAttribute('tID') === tID) {
+                    element.click();
+                    return;
+                }
+            });
         }
     }
 
@@ -183,4 +208,4 @@ class Proxies {
     }
 }
 
-module.exports=Proxies;
+module.exports = Proxies;

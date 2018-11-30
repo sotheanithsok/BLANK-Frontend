@@ -3,14 +3,13 @@
 //   // Note that the path to electron may vary according to the main file
 //   electron: require(`${__dirname}/node_modules/electron`)
 // });
-
+const p = require('path')
 const {
   app,
   BrowserWindow,
   ipcMain,
   Menu
 } = require('electron')
-
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -141,7 +140,7 @@ function buildMainMenu() {
 //SingleInstanance
 let username;
 let password;
-let userManager = require('./src/js/userManager');
+let userManager = require(p.join(__dirname,'/src/js/userManager'));
 
 //IPC communication
 ipcMain.on('synchronous-main-getRSAPrivateKey', (event, args) => {
@@ -164,7 +163,10 @@ ipcMain.on('asynchronous-main-setOtherPublicKey', (event, args) => {
 
 ipcMain.on('synchronous-main-getConversationLength',(event,args)=>{
   event.returnValue = userManager.getUser().messagesChain[args].length;
-  
+})
+
+ipcMain.on('synchronous-main-getConversationsName',(event, args)=>{
+  event.returnValue=Object.getOwnPropertyNames(userManager.getUser().messagesChain);
 })
 
 ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
@@ -176,13 +178,18 @@ ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
 ipcMain.on('asynchronous-main-addMessage', (event, args) => {
   if (userManager.currentUser.messagesChain[args.sender] === undefined) {
     userManager.currentUser.messagesChain[args.sender] = [];
+    userManager.currentUser.messagesChain[args.sender].push({
+      type: args.type,
+      message: args.message
+    })
+    win.webContents.send('asynchronous-addNewConversation',args.sender);
+  }else{
+    userManager.currentUser.messagesChain[args.sender].push({
+      type: args.type,
+      message: args.message
+    })
   }
-  userManager.currentUser.messagesChain[args.sender].push({
-    type: args.type,
-    message: args.message
-  })
   userManager.saveUser(username,password);
-
 })
 
 ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
@@ -203,6 +210,7 @@ ipcMain.on('asynchronous-updateJWT', (event, args) => {
   userManager.loadUser(args.username, args.passphrase);
   userManager.getUser().jwtToken = args.token;
   userManager.saveUser(args.username, args.passphrase);
+  userManager.currentUser.messagesChain={}
   username = args.username;
   password = args.passphrase;
   win.webContents.on('dom-ready', () => {

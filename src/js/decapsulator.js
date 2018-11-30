@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const fs = require('fs');
 
 /**
  * Decapsulator uses to decrypt data

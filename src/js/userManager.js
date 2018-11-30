@@ -1,9 +1,10 @@
-const path = './resources/users/';
+const path = './usersData/';
 const crypto = require('crypto');
 const fs = require('fs');
-const encapsulator = new(require('./encapsulator'));
-const decapsulator = new(require('./decapsulator'));
-const User = require('./user');
+const p = require('path');
+const encapsulator = new(require(p.join(__dirname,'/encapsulator.js')));
+const decapsulator = new(require(p.join(__dirname,'/decapsulator.js')));
+const User = require(p.join(__dirname,'/User.js'));
 
 
 /**
@@ -11,8 +12,8 @@ const User = require('./user');
  */
 class UserManager {
     constructor() {
-        if (!fs.existsSync('./resources/')) {
-            fs.mkdirSync('./resources/')
+        if (!fs.existsSync('./usersData/')) {
+            fs.mkdirSync('./usersData/')
         }
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path)
@@ -44,7 +45,6 @@ class UserManager {
             }
 
         } catch (err) {
-            console.log(err);
             console.error('Failed to load user');
         }
 
@@ -71,7 +71,6 @@ class UserManager {
 
             });
         } catch (err) {
-            console.log(err);
             console.error('Fail to save user');
         }
 

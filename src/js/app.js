@@ -204,3 +204,14 @@ function timerFunction(){
         }       
     },250)
 }
+
+function initialize(){
+    let names =ipcRenderer.sendSync('synchronous-main-getConversationsName');
+    while(names.length>0){
+        proxies.users.push(names.pop());
+    }
+}
+
+ipcRenderer.on('asynchronous-addNewConversation',(event,args)=>{
+    proxies.users.push(args);
+})

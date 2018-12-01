@@ -19,9 +19,15 @@ let mainMenu
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    useContentSize: true
+    minWidth: 1280,
+    minHeight: 800,
+    title: "Blank",
+    center: false,
+    webPreferences: {
+      minimumFontSize: 18,
+      defaultFontSize: 24,
+      defaultMonospaceFontSize: 20
+    }
   })
 
   // and load the index.html of the app.
@@ -101,7 +107,7 @@ function buildMainMenu() {
     let name = knownPK.pop();
     pk.push({
       label: name,
-      click(){
+      click() {
         win.webContents.send('asynchronous-main-showOthersPublicKey', {
           RSAPublicKey: userManager.currentUser.RSAPublicKey,
           name: name
@@ -140,7 +146,7 @@ function buildMainMenu() {
 //SingleInstanance
 let username;
 let password;
-let userManager = require(p.join(__dirname,'/src/js/userManager'));
+let userManager = require(p.join(__dirname, '/src/js/userManager'));
 
 //IPC communication
 ipcMain.on('synchronous-main-getRSAPrivateKey', (event, args) => {
@@ -158,15 +164,15 @@ ipcMain.on('synchronous-main-getOtherPublicKey', (event, args) => {
 ipcMain.on('asynchronous-main-setOtherPublicKey', (event, args) => {
   userManager.getUser().keysChain[args.name] = args.key;
   buildMainMenu();
-  userManager.saveUser(username,password);
+  userManager.saveUser(username, password);
 })
 
-ipcMain.on('synchronous-main-getConversationLength',(event,args)=>{
+ipcMain.on('synchronous-main-getConversationLength', (event, args) => {
   event.returnValue = userManager.getUser().messagesChain[args].length;
 })
 
-ipcMain.on('synchronous-main-getConversationsName',(event, args)=>{
-  event.returnValue=Object.getOwnPropertyNames(userManager.getUser().messagesChain);
+ipcMain.on('synchronous-main-getConversationsName', (event, args) => {
+  event.returnValue = Object.getOwnPropertyNames(userManager.getUser().messagesChain);
 })
 
 ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
@@ -182,14 +188,14 @@ ipcMain.on('asynchronous-main-addMessage', (event, args) => {
       type: args.type,
       message: args.message
     })
-    win.webContents.send('asynchronous-addNewConversation',args.sender);
-  }else{
+    win.webContents.send('asynchronous-addNewConversation', args.sender);
+  } else {
     userManager.currentUser.messagesChain[args.sender].push({
       type: args.type,
       message: args.message
     })
   }
-  userManager.saveUser(username,password);
+  userManager.saveUser(username, password);
 })
 
 ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
@@ -201,7 +207,7 @@ ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
     name: args,
     messages: userManager.currentUser.messagesChain[args]
   })
-  userManager.saveUser(username,password);
+  userManager.saveUser(username, password);
 })
 
 

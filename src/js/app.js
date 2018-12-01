@@ -210,7 +210,10 @@ function initialize() {
     while (names.length > 0) {
         proxies.users.push(names.pop());
     }
-
+    
+    if(proxies.users.length>0){
+        document.getElementById('users-container').childNodes[0].click()
+    }
 
     messageInput.addEventListener("keyup", function (event) {
         event.preventDefault();

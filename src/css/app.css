@@ -1,6 +1,5 @@
 
 
-
 #main-container {
     display: flex;
     width: 100vw;
@@ -10,6 +9,7 @@
 #main-container * {
     font-family: Arial;
     font-size: 25px;
+    outline: none;
 }
 
 
@@ -148,12 +148,21 @@
     width:90%;
 }
 
-
-
-
-
 #users-container #selectedButton{
     background-color:#FF5A09 ;
     color:white;
     border-color: white
+}
+*::-webkit-scrollbar-track {
+    padding: 2px 0;
+    background-color: #333333;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #202020;
 }

@@ -146,10 +146,12 @@ class Proxies {
         }
         usersContainer.insertBefore(button, k);
         button.onclick = function () {
+            button.disabled=true;
             ipcRenderer.send('asynchronous-request-updateMessages', name);
             button.id="selectedButton";
             if(btn!=null){
                 btn.id="";
+                btn.disabled=false;
             }
             btn=button;
         }

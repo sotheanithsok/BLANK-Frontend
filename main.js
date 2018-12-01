@@ -210,7 +210,6 @@ ipcMain.on('asynchronous-updateJWT', (event, args) => {
   userManager.loadUser(args.username, args.passphrase);
   userManager.getUser().jwtToken = args.token;
   userManager.saveUser(args.username, args.passphrase);
-  userManager.currentUser.messagesChain={}
   username = args.username;
   password = args.passphrase;
   win.webContents.on('dom-ready', () => {

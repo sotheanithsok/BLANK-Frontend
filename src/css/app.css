@@ -1,31 +1,40 @@
 #main-container {
     display: flex;
-    width: 99vw;
-    height: 97vh;
-
+    width: 100vw;
+    height: 100vh;
+    background-color:#333333 ;
+}
+#main-container * {
+    font-family: Arial;
+    font-size: 25px;
 }
 
+
 #left-container {
-    background-color: red;
+    background-color: #202020;
     flex: 0.25;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    padding: 0.5% 0.5% 0.5% 0.5%
 }
 
 #right-container {
-    background-color: yellow;
     flex: 1;
-    margin-left: 0.5%;
     display: flex;
     flex-direction: column;
 }
 
-
+#messages-container{
+    
+    flex: 0.9;
+    display:flex;
+    flex-direction: column;
+    overflow: auto;
+} 
 
 #message-controller-container{
-    background-color: orange;
     flex:0.1;
     display: flex;
     flex-direction: row;
@@ -35,7 +44,26 @@
     width: 100%;
     resize: none;
     overflow: hidden;
+    border-radius: 15px;
+    padding: 1% 1% 1% 1%;
+    margin:  0% 1% 0.5% 1%;
+    background-color:#575656 ;
+    border-color: #FF5A09 ;
+    color: rgb(253, 118, 51);
 }
+#message-input-box::placeholder{
+    color: rgb(253, 118, 51);
+}
+
+#sendButton{
+    margin:  0.5% 1% 0.5% 0%;
+    height: 75%;
+    border-radius: 10%;
+    background-color:#575656 ;
+    color: rgb(253, 118, 51);
+    border-color: #FF5A09 ;
+}
+
 
 #messages-container button{
     overflow-wrap: break-word;
@@ -47,19 +75,16 @@
     flex-shrink: 0;
     margin: 1% 1% 1% 1%;
     pointer-events: none;
+    color:rgb(253, 118, 51);
+    border-color: #5a5959;
+    background: transparent; 
+    border-radius:19px;
 }
 
-#messages-container{
-    background-color:gray;
-    flex: 0.9;
-    margin-bottom: 1%;
-    display:flex;
-    flex-direction: column;
-    overflow: auto
-} 
+
 
 #users-container{
-    background-color: green;
+ 
     text-align: center;
     overflow:auto;
     position: relative;
@@ -67,26 +92,45 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding-top: 5%
 
 }
 #users-container button{
     overflow-wrap: break-word;
     word-break:break-word;
     hyphens: auto;
+    background-color:#333333 ;
+    color: rgb(253, 118, 51);
+    border-color: #FF5A09 ;
+    margin:  0% 5% 5% 5%;
+    border-radius: 1000px;
+    height:5%;
+
 }
 #search-user-field{
     width: 100%;
     height: 5%;
+    background-color:transparent ;
+    border-color: #FF5A09 ;
+    color: rgb(253, 118, 51);
+    margin: 1% 1% 1% 1%;
+    border-radius: 15px;
+    padding-left: 3%;
+}
+
+#search-user-field::placeholder{
+    color: rgb(253, 118, 51);
 }
 #search-result-container{
-    background-color: aqua;
+    background-color: transparent;
     display: flex;
     flex-direction:column-reverse;
     position: absolute;
     width: 100%;
     max-height: 50%;
-    top:4%;
+    top:7%;
     overflow: hidden;
+    align-items:center;
 }
 
 #search-result-container button{
@@ -94,6 +138,11 @@
     word-break:break-word;
     hyphens: auto;
     flex-shrink: 0;
+    background-color:#d64903 ;
+    color: #ffffff;
+    border-color: #ffffff ;
+    margin:  1% 1% 1% 1%;
+    width:90%;
 }
 
 

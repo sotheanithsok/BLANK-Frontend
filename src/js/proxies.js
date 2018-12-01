@@ -102,7 +102,7 @@ class Proxies {
         let text = document.createElement('pre');
         let whitespace = "";
         for (let i = 0; i <= sender.length; i++) {
-            whitespace += ' ';
+            whitespace += '  ';
         }
         let temp = message.replace(/^/g, whitespace);
         text.innerHTML = sender + ":\n" + temp;

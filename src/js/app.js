@@ -1,7 +1,7 @@
 const messageInput = document.getElementById('message-input-box');
 const userSearchInput = document.getElementById('search-user-field');
-const sendButton=document.getElementById('sendButton');
-
+const sendButton = document.getElementById('sendButton');
+let btn=null;
 function startFilterSearch() {
     if (userSearchInput.value.length > 0) {
         httpRequester.searchUsersByName(userSearchInput.value);
@@ -21,13 +21,13 @@ function endSearch() {
 }
 
 function sendMessage() {
-    if(messageInput.value!=''){
-        let encrypted=encapsulator.encryptPGP(messageInput.value,ipcRenderer.sendSync('synchronous-main-getOtherPublicKey',target.value))
-        httpRequester.postMessage(target.value,encrypted.content,encrypted.key,encrypted.tag)
-        ipcRenderer.send('asynchronous-main-addMessage',{
-            sender:target.value,
-            type:'To',
-            message:messageInput.value
+    if (messageInput.value != '') {
+        let encrypted = encapsulator.encryptPGP(messageInput.value, ipcRenderer.sendSync('synchronous-main-getOtherPublicKey', target.value))
+        httpRequester.postMessage(target.value, encrypted.content, encrypted.key, encrypted.tag)
+        ipcRenderer.send('asynchronous-main-addMessage', {
+            sender: target.value,
+            type: 'To',
+            message: messageInput.value
         })
         proxies.messages.push({
             sender: 'You',
@@ -97,7 +97,7 @@ function promptForPublicKey(message) {
         callback: function (value) {
             if (value === false) {
             } else {
-                value=JSON.parse("\""+value+"\"")
+                value = JSON.parse("\"" + value + "\"")
                 let testResult = encapsulator.encryptPGP('Hello', value);
                 if (testResult) {
                     ipcRenderer.send('asynchronous-main-setOtherPublicKey', {
@@ -133,7 +133,7 @@ function displayUserKeyPair(publicKey, privateKey) {
     vex.dialog.open({
         message: 'Your RSA key pairs:',
         input: [
-            '<input name="publicKey" type="text" placeholder="Public Key" value='+JSON.stringify(publicKey)+'required />',
+            '<input name="publicKey" type="text" placeholder="Public Key" value=' + JSON.stringify(publicKey) + 'required />',
             '<input name="privateKey" type="text" placeholder="Private Key" value=' + JSON.stringify(privateKey) + '"required />'
         ].join(''),
         buttons: [
@@ -143,8 +143,8 @@ function displayUserKeyPair(publicKey, privateKey) {
         callback: function (data) {
             if (!data) {
             } else {
-                data.publicKey=(JSON.parse("\""+data.publicKey+"\""));
-                data.privateKey=(JSON.parse("\""+data.privateKey+"\""));
+                data.publicKey = (JSON.parse("\"" + data.publicKey + "\""));
+                data.privateKey = (JSON.parse("\"" + data.privateKey + "\""));
                 let m = encapsulator.encryptPGP('HelloWorld', data.publicKey)
                 let k = decapsulator.decryptPGP(m, data.privateKey)
                 if (k === 'HelloWorld') {
@@ -166,7 +166,7 @@ function displayOtherKey(name, publicKey) {
     vex.dialog.open({
         message: `${name} public key:`,
         input: [
-            '<input name="publicKey" type="text" placeholder="Public Key" value='+JSON.stringify(publicKey)+'required />',
+            '<input name="publicKey" type="text" placeholder="Public Key" value=' + JSON.stringify(publicKey) + 'required />',
         ].join(''),
         buttons: [
             jQuery.extend({}, vex.dialog.buttons.YES, { text: 'Save' }),
@@ -175,7 +175,7 @@ function displayOtherKey(name, publicKey) {
         callback: function (data) {
             if (!data) {
             } else {
-                data.publicKey=(JSON.parse("\""+data.publicKey+"\""));
+                data.publicKey = (JSON.parse("\"" + data.publicKey + "\""));
                 let m = encapsulator.encryptPGP('HelloWorld', data.publicKey)
                 if (m) {
                     ipcRenderer.send('asynchronous-main-setOtherPublicKey', {
@@ -191,27 +191,35 @@ function displayOtherKey(name, publicKey) {
     })
 }
 
-function timerFunction(){
-    setInterval(()=>{
+function timerFunction() {
+    setInterval(() => {
         httpRequester.getMessage();
-    },1000)
+    }, 1000)
 
-    setInterval(()=>{
-        if(target.value!=''){
-            if(ipcRenderer.sendSync('synchronous-main-getConversationLength',target.value)!=proxies.messages.length){
-                ipcRenderer.send('asynchronous-request-updateMessages',target.value);
+    setInterval(() => {
+        if (target.value != '') {
+            if (ipcRenderer.sendSync('synchronous-main-getConversationLength', target.value) != proxies.messages.length) {
+                ipcRenderer.send('asynchronous-request-updateMessages', target.value);
             }
-        }       
-    },250)
+        }
+    }, 250)
 }
 
-function initialize(){
-    let names =ipcRenderer.sendSync('synchronous-main-getConversationsName');
-    while(names.length>0){
+function initialize() {
+    let names = ipcRenderer.sendSync('synchronous-main-getConversationsName');
+    while (names.length > 0) {
         proxies.users.push(names.pop());
     }
+
+
+    messageInput.addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13&&!event.shiftKey) {
+            sendButton.click();
+        }
+    });
 }
 
-ipcRenderer.on('asynchronous-addNewConversation',(event,args)=>{
+ipcRenderer.on('asynchronous-addNewConversation', (event, args) => {
     proxies.users.push(args);
 })

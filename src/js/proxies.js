@@ -137,7 +137,6 @@ class Proxies {
         button.appendChild(document.createTextNode(name));
         button.setAttribute('tID', btoa(name));
         let k = null;
-
         let children = usersContainer.childNodes;
         for (let i = 0; i < children.length; i++) {
             if (atob(children[i].getAttribute('tID')).localeCompare(name) === 1) {
@@ -148,6 +147,11 @@ class Proxies {
         usersContainer.insertBefore(button, k);
         button.onclick = function () {
             ipcRenderer.send('asynchronous-request-updateMessages', name);
+            button.id="selectedButton";
+            if(btn!=null){
+                btn.id="";
+            }
+            btn=button;
         }
     }
 

@@ -22,12 +22,7 @@ function createWindow() {
     width: 1280,
     height: 800,
     title: "Blank",
-    center: false,
-    webPreferences: {
-      minimumFontSize: 18,
-      defaultFontSize: 24,
-      defaultMonospaceFontSize: 20
-    }
+    center: false
   })
 
   // and load the index.html of the app.
@@ -72,9 +67,9 @@ app.on('activate', () => {
   }
 })
 
-
-
-
+/**
+ * Create a new menu bar.
+ */
 function buildMainMenu() {
   let mainMenuTemplate = [
     {
@@ -120,27 +115,6 @@ function buildMainMenu() {
   Menu.setApplicationMenu(mainMenu);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // In this file you can include the rest of your app's specific main process
 
 //SingleInstanance
@@ -149,38 +123,62 @@ let password;
 let userManager = require(p.join(__dirname, '/src/js/userManager'));
 
 //IPC communication
+/**
+ * A request for user's RSA private key.
+ */
 ipcMain.on('synchronous-main-getRSAPrivateKey', (event, args) => {
   event.returnValue = userManager.getUser().RSAPrivateKey;
 })
 
+/**
+ * A request for user's JWT token.
+ */
 ipcMain.on('synchronous-main-getJWTToken', (event, args) => {
   event.returnValue = userManager.getUser().jwtToken;
 })
 
+/**
+ * A request for other people's public key.
+ */
 ipcMain.on('synchronous-main-getOtherPublicKey', (event, args) => {
   event.returnValue = userManager.getUser().keysChain[args];
 })
 
+/**
+ * A request to update other people's public key.
+ */
 ipcMain.on('asynchronous-main-setOtherPublicKey', (event, args) => {
   userManager.getUser().keysChain[args.name] = args.key;
   buildMainMenu();
   userManager.saveUser(username, password);
 })
 
+/**
+ * A request to get the converstaion length.
+ */
 ipcMain.on('synchronous-main-getConversationLength', (event, args) => {
   event.returnValue = userManager.getUser().messagesChain[args].length;
 })
 
+/**
+ * A request to get the conversation.
+ */
 ipcMain.on('synchronous-main-getConversationsName', (event, args) => {
   event.returnValue = Object.getOwnPropertyNames(userManager.getUser().messagesChain);
 })
 
+/**
+ * A request to set the user's RSA key pair.
+ */
 ipcMain.on('asynchronous-main-setRSAKeyPair', (event, args) => {
   userManager.getUser().RSAPrivateKey = args.RSAPrivateKey;
   userManager.getUser().RSAPublicKey = args.RSAPublicKey;
   userManager.saveUser(username, password);
 })
 
+/**
+ * A request to add a new message.
+ */
 ipcMain.on('asynchronous-main-addMessage', (event, args) => {
   if (userManager.currentUser.messagesChain[args.sender] === undefined) {
     userManager.currentUser.messagesChain[args.sender] = [];
@@ -198,6 +196,9 @@ ipcMain.on('asynchronous-main-addMessage', (event, args) => {
   userManager.saveUser(username, password);
 })
 
+/**
+ * A request to update UI message.
+ */
 ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
   if (userManager.currentUser.messagesChain[args] === undefined) {
     userManager.currentUser.messagesChain[args] = [];
@@ -210,7 +211,9 @@ ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
   userManager.saveUser(username, password);
 })
 
-
+/**
+ * A request to set JWT token.
+ */
 ipcMain.on('asynchronous-updateJWT', (event, args) => {
   win.loadFile('./src/html/app.html')
   userManager.loadUser(args.username, args.passphrase);

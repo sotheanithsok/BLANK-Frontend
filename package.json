@@ -30,11 +30,11 @@
   },
   "build": {
     "appId": "com.electron.blank",
-    "productName":"Blank",
+    "productName": "Blank",
     "win": {
       "target": "NSIS"
     },
-    "files":[
+    "files": [
       "!**/usersData",
       "!**/.vscode"
     ]

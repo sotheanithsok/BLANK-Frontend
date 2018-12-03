@@ -44,8 +44,6 @@ class Encapsulator {
 
         } catch (e) {
             console.log('Failed to encrypt data');
-            console.log(e);
-            return;
         }
 
     }

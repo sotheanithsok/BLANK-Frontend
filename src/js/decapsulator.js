@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const fs = require('fs');
 
 /**
  * Decapsulator uses to decrypt data
@@ -18,18 +17,23 @@ class Decapsulator {
      * @param {*} privateKey RSA private key.
      */
     decryptPGP(encrypted, privateKey) {
-        let asekey = crypto.privateDecrypt(privateKey, Buffer.from(encrypted.key, 'hex'));
-        let tag = Buffer.from(encrypted.tag, 'hex');
-
-        //extract the first 32 bytes from the content to get the iv.
-        let iv = Buffer.from(encrypted.content.substring(0, 32), 'hex');
-
-        //Decript the content
-        var decipher = crypto.createDecipheriv(this._algorithm, asekey, iv)
-        decipher.setAuthTag(tag);
-        var decrypt = decipher.update(encrypted.content.substring(32), 'hex', 'utf8')
-        decrypt += decipher.final('utf8');
-        return decrypt;
+        try{
+            let asekey = crypto.privateDecrypt(privateKey, Buffer.from(encrypted.key, 'hex'));
+            let tag = Buffer.from(encrypted.tag, 'hex');
+    
+            //extract the first 32 bytes from the content to get the iv.
+            let iv = Buffer.from(encrypted.content.substring(0, 32), 'hex');
+    
+            //Decript the content
+            var decipher = crypto.createDecipheriv(this._algorithm, asekey, iv)
+            decipher.setAuthTag(tag);
+            var decrypt = decipher.update(encrypted.content.substring(32), 'hex', 'utf8')
+            decrypt += decipher.final('utf8');
+            return decrypt;
+        }catch(err){
+            console.log('Failed to decrypt data')
+        }
+        
     }
 
     /**

@@ -20,13 +20,16 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    padding: 0.5% 0.5% 0.5% 0.5%
+    padding: 0.5% 0.5% 0.5% 0.5%;
+    min-width: 15%;
+    
 }
 
 #right-container {
     flex: 1;
     display: flex;
     flex-direction: column;
+    max-width: 80%;
 }
 
 #messages-container{
@@ -34,13 +37,15 @@
     flex: 0.9;
     display:flex;
     flex-direction: column;
-    overflow: auto;
+    overflow: auto; 
+    max-width: 100%;
 } 
 
 #message-controller-container{
     flex:0.1;
     display: flex;
     flex-direction: row;
+    
 }
 #message-input-box {
     align-content: center;
@@ -69,12 +74,8 @@
 
 
 #messages-container button{
-    overflow-wrap: break-word;
-    word-break: break-all;
-    hyphens: auto;
-    text-align: left;
     width: fit-content;
-    height: max-content;
+    height: fit-content;
     flex-shrink: 0;
     margin: 1% 1% 1% 1%;
     pointer-events: none;
@@ -82,7 +83,20 @@
     border-color: #5a5959;
     background: transparent; 
     border-radius:19px;
+    white-space: normal;
+    max-width: 98%;
+} 
+  
+#messages-container button pre{
+    max-width: 100%;
+    text-align: left;
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */ 
 }
+
 
 
 

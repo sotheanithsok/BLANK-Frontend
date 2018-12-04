@@ -59,6 +59,5 @@ typings/
 
 # next.js build output
 .next
-
-#custome git ignore
-resources/users
+dist/
+usersData/

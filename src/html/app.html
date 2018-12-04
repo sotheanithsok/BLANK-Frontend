@@ -4,31 +4,37 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Encrypted Chat Application</title>
     <meta name="This is a client side application for encrypted chat app developed by Team Cyberguard (Sotheanith Sok and Hayat Ahmed) for CECS 478 at CSULB."
         content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/app.css">
-
 </head>
 
-<body>
+<body style="margin:0;">
     <div id="main-container">
         <div id="left-container">
-            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()" onclick="startFilterSearch()" onfocusout="endSearch()"  type="search">
+            <input id="search-user-field" placeholder="Find or start a conversation." oninput="startFilterSearch()"
+                onclick="startFilterSearch()" onfocusout="endSearch()" type="search">
             <div id="users-container"></div>
             <div id=search-result-container></div>
         </div>
         <div id="right-container">
             <div id="messages-container"></div>
             <div id="message-controller-container">
-                <textarea id="message-input-box" placeholder="Write a message..."></textarea>
-                <button onclick="sendMessage()">Send</button>
+                <textarea id="message-input-box" disabled onclick="checkForPublicKey()" placeholder="Write a message..."></textarea>
+                <button id="sendButton" onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
+    
+    <script src="../js/import.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../../node_modules/vex-js/dist/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+    <link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex.css" />
+    <link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex-theme-os.css" />
+    <script>timerFunction()</script>
+    <script>initialize()</script>
 </body>
-<script src="../js/import.js"></script>
-<script src="../js/app.js"></script>
 
 </html>

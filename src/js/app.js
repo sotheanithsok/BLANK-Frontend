@@ -57,7 +57,7 @@ function endSearch() {
  * Send a message
  */
 function sendMessage() {
-    if (messageInput.value != '') {
+    if (messageInput.value.trim() != '') { 
         let encrypted = encapsulator.encryptPGP(messageInput.value, ipcRenderer.sendSync('synchronous-main-getOtherPublicKey', target.value))
         httpRequester.postMessage(target.value, encrypted.content, encrypted.key, encrypted.tag)
         ipcRenderer.send('asynchronous-main-addMessage', {
@@ -69,6 +69,7 @@ function sendMessage() {
             sender: 'You',
             message: messageInput.value
         });
+        messageInput.value = "";
 
     }
 }
@@ -220,9 +221,9 @@ function initialize() {
         document.getElementById('users-container').childNodes[0].click()
     }
 
-    messageInput.addEventListener("keyup", function (event) {
-        event.preventDefault();
+    messageInput.addEventListener("keypress", function (event) {
         if (event.keyCode === 13 && !event.shiftKey) {
+            event.preventDefault();
             sendButton.click();
         }
     });

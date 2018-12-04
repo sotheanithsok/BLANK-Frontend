@@ -110,7 +110,6 @@ class Proxies {
         button.setAttribute('tID', btoa(sender + message + timestamp));
         messagesContainer.appendChild(button);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        messageInput.value = ""
     }
 
     /**

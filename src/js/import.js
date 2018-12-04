@@ -1,4 +1,4 @@
-const request = require('request').defaults({ baseUrl: 'http://localhost:3000/', json: true });
+const request = require('request').defaults({ baseUrl: 'https://cgencryptedchat.me/', json: true });
 const {ipcRenderer}=require('electron');
 const p=require('path')
 const httpRequester = new (require(p.join(__dirname,'../js/httpRequester')));

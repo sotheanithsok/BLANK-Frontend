@@ -1,46 +1,49 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    	<title>Users Signing Form</title>
-    	<link rel="stylesheet" type="text/css" href="../css/signup.css">
+	<title>Users Signing Form</title>
+	<link rel="stylesheet" type="text/css" href="../css/signup.css">
 
 </head>
+
 <body>
 
-		<h1>Sign Up</h1>
+	<h1>Sign Up</h1>
 
-	 	<div class="container">
-	 		<div class="box-1">
-    	<form class="my-form">
-			<div class="form-group">
-				<label>Name</label>
-				<input type="text" name="name" 
-				placeholder="Enter First name">
-			</div>
-			<div class="form-group">
-				<label>Username</label>
-				<input type="text" name="username"
-				placeholder="Choose username">
-			</div>
-			<div class="form-group">
-				<label>Password</label>
-				<input type="password" name="password"
-				placeholder="Choose password">
-			</div>
-			<br>
-			<div class="form-group">
-				<label>Email</label>
-				<input type="email" name="email"
-				placeholder="Enter email">
-			</div>
+	<div class="container">
+		<div class="box-1">
+			<form class="my-form">
+				<div class="form-group">
+					<label>Name</label>
+					<input type="text" id="name" placeholder="Enter First name">
+				</div>
+				<div class="form-group">
+					<label>Username</label>
+					<input type="text" id="username" placeholder="Choose username">
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" id="password" placeholder="Choose password">
+				</div>
+				<br>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" id="email" placeholder="Enter email">
+				</div>
 
-			<br>
-			<br>
-			<input class="button" type="submit" value="Submit" name="">		
-			</div>	
-     </form>
+				<br>
+				<br>
+				<input class="button" type="button" value="Submit" onclick="startSignup()">
+				<input class="button" type="button" value="Back to Login" onclick="switchToLogin()">
+		</div>
+		</form>
+		<script src='../js/import.js'></script>
+		<script src='../js/signup.js'></script>
+		<script src="../../node_modules/vex-js/dist/js/vex.combined.min.js"></script>
+		<script>vex.defaultOptions.className = 'vex-theme-os'</script>
+		<link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex.css" />
+		<link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex-theme-os.css" />
+</body>
 
-   </body>
-   <script src='../js/import.js'></script>
-   <script src='../js/signup.js'></script>
-</html> 
+</html>

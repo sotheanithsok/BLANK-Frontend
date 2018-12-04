@@ -226,3 +226,12 @@ ipcMain.on('asynchronous-updateJWT', (event, args) => {
   })
 })
 
+ipcMain.on('asynchonous-main-switchToLogin',(event,args)=>{
+  Menu.setApplicationMenu(null);
+  win.loadFile('./src/html/login.html')
+})
+
+ipcMain.on('asynchonous-main-switchToSignup',(event,args)=>{
+  Menu.setApplicationMenu(null);
+  win.loadFile('./src/html/signup.html')
+})

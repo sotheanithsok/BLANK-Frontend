@@ -16,7 +16,24 @@ class HttpRequester {
      * @param {*} passphrase super secret.
      */
     signup(username, email, name, passphrase) {
-
+        request.post(
+            '/signup', {
+                body: {
+                    username: username,
+                    password: passphrase,
+                    email:email,
+                    name:name
+                }
+            },
+            (err, res, body) => {
+                if (!err) {
+                    if(res.statusCode===201){
+                        successfullToSignup();
+                    }else{
+                        failToSignup();
+                    }
+                }
+            })
     }
 
     /**
@@ -35,15 +52,19 @@ class HttpRequester {
                 }
             },
             (err, res, body) => {
-                if (!err && res.statusCode === 200) {
-                    ipcRenderer.send('asynchronous-updateJWT', {
-                        username: username,
-                        passphrase: passphrase,
-                        token: body.token
-                    });
-                    document.getElementById('username').value = '';
-                    document.getElementById('password').value = '';
-
+                if (!err) {
+                    console.log(res.statusCode)
+                    if(res.statusCode===200){
+                        ipcRenderer.send('asynchronous-updateJWT', {
+                            username: username,
+                            passphrase: passphrase,
+                            token: body.token
+                        });
+                        document.getElementById('username').value = '';
+                        document.getElementById('password').value = '';
+                    }else{
+                        failToLogin();
+                    }   
                 }
             })
     }

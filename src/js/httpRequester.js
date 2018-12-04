@@ -53,7 +53,6 @@ class HttpRequester {
             },
             (err, res, body) => {
                 if (!err) {
-                    console.log(res.statusCode)
                     if(res.statusCode===200){
                         ipcRenderer.send('asynchronous-updateJWT', {
                             username: username,

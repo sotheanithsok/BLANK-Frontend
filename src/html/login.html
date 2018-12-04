@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    	<title>Users Loginin Form</title>
-    	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	<title>Users Loginin Form</title>
+	<link rel="stylesheet" type="text/css" href="../css/login.css">
 
 </head>
+
 <body>
 
-		<h1>Login</h1>
+	<h1>Login</h1>
 
-	 	<div class="container">
-	 		<div class="box-1">
-    	<form class="my-form">
-			<div class="form-group">
-				<label>Username</label>
-				<input type="text" name="lastName"
-				placeholder="Enter username">
-			</div>
-			<div class="form-group">
-				<label>Password</label>
-				<input type="password" name="password"
-				placeholder="Enter password">
-			</div>
-			
+	<div class="container">
+		<div class="box-1">
+			<form class="my-form">
+				<div class="form-group">
+					<label>Username</label>
+					<input type="text" id="username" placeholder="Enter username">
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" id="password" placeholder="Enter password">
+				</div>
+				<br>
+				<br>
+				<input class="button" type="button" value="Submit" onclick="startLogin()">
+				<input class="button" type="button" value="Sign Up" onclick="switchToSignup()">
 
-			<br>
-			<br>
-			<input class="button" type="submit" value="Submit" name="">		
-			</div>	
-     </form>
+		</div>
+		</form>
+		<script src='../js/import.js'></script>
+		<script src='../js/login.js'></script>
+		<script src="../../node_modules/vex-js/dist/js/vex.combined.min.js"></script>
+		<script>vex.defaultOptions.className = 'vex-theme-os'</script>
+		<link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex.css" />
+		<link rel="stylesheet" href="../../node_modules/vex-js/dist/css/vex-theme-os.css" />
+</body>
 
-   </body>
-   <script src='../js/import.js'></script>
-   <script src='../js/login.js'></script>
-</html> 
-
+</html>

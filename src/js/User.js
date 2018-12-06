@@ -8,7 +8,6 @@ class User {
         let k = keypair();
         this.RSAPublicKey = k.public;
         this.RSAPrivateKey = k.private;
-        this.jwtToken = null;
         this.keysChain = {};
         this.messagesChain = {};
     }

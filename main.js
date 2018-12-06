@@ -120,6 +120,7 @@ function buildMainMenu() {
 //SingleInstanance
 let username;
 let password;
+let jwtToken;
 let userManager = require(p.join(__dirname, '/src/js/userManager'));
 
 //IPC communication
@@ -134,7 +135,7 @@ ipcMain.on('synchronous-main-getRSAPrivateKey', (event, args) => {
  * A request for user's JWT token.
  */
 ipcMain.on('synchronous-main-getJWTToken', (event, args) => {
-  event.returnValue = userManager.getUser().jwtToken;
+  event.returnValue = jwtToken;
 })
 
 /**
@@ -217,10 +218,10 @@ ipcMain.on('asynchronous-request-updateMessages', (event, args) => {
 ipcMain.on('asynchronous-updateJWT', (event, args) => {
   win.loadFile('./src/html/app.html')
   userManager.loadUser(args.username, args.passphrase);
-  userManager.getUser().jwtToken = args.token;
-  userManager.saveUser(args.username, args.passphrase);
+
   username = args.username;
   password = args.passphrase;
+  jwtToken = args.token;
   win.webContents.on('dom-ready', () => {
     buildMainMenu();
   })

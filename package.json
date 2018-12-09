@@ -1,6 +1,6 @@
 {
   "name": "cg-encryptedchatapp-frontend",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "This is the standalone client from an encrypted chat app build by Cyberguard",
   "main": "main.js",
   "scripts": {

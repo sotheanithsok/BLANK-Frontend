@@ -8,21 +8,16 @@ body{
 	line-height:1.6em;
 	margin:0;
 }
-h1 {
-	color: blue;
-	
-}
 .container{
-	color: blue;
-	width:80%;
-	margin-top: 5px;
-	margin-bottom: 100px;
-	margin-right: 150px;
-	margin-left: 200px;
+	color: brown;
+	width:85%;
+	margin-top:5%;
+	margin-bottom: 40%;
+	margin-right: 50%;
+	margin-left: 35%;
 
 }
 
-}
 .button{
 	background-color:#333;
 	color:#fff;

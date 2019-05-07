@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/sotheanith/CG-EncryptedChatApp-Frontend#readme",
   "devDependencies": {
-    "electron": "^3.0.10",
-    "electron-builder": "^20.38.2"
+    "electron": "^3.1.9",
+    "electron-builder": "^20.40.2"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "keypair": "^1.0.1",
     "request": "^2.88.0",
     "vex-js": "^4.1.0"

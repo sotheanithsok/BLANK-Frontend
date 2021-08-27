@@ -9,6 +9,10 @@ The frontend for an encrypted chat application.
  - [CSS](https://www.w3schools.com/css/)
  - [NodeJS](https://nodejs.org/en/)
  - [Electron](https://www.electronjs.org/)
+ - [Vex-JS](https://www.npmjs.com/package/vex-js)
+ - [Request](https://www.npmjs.com/package/request)
+ - [keypair](https://www.npmjs.com/package/keypair)
+ - [jQuery](https://www.npmjs.com/package/jquery)
  
 ## Author
  - [Sotheanith Sok](https://github.com/sotheanith)

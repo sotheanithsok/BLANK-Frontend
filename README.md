@@ -14,7 +14,7 @@ The frontend for an encrypted chat application.
  - [keypair](https://www.npmjs.com/package/keypair)
  - [jQuery](https://www.npmjs.com/package/jquery)
  
-## Author
+## Authors
  - [Sotheanith Sok](https://github.com/sotheanith)
  - [Hayat Ahmed](https://github.com/hayat456)
 
